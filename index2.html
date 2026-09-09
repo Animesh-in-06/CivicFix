@@ -129,6 +129,20 @@
            MY PROFILE BUTTON
         ========================= */
 
+        .profile-area {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-left: auto;
+        }
+
+        .profile-label {
+            color: rgba(255, 255, 255, .9);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
         .profile-btn {
             width: 44px;
             height: 44px;
@@ -766,99 +780,180 @@
                 font-size: 12px;
             }
         }
-    
 
-/* =========================================================
-   CIVICFIX MOBILE RESPONSIVE LAYER
-   Desktop layout/functionality is intentionally unchanged.
-========================================================= */
-@media (max-width: 760px) {
-  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-  img, svg, video, canvas { max-width: 100%; }
-  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 
-  nav {
-    width: calc(100% - 24px);
-    max-width: none;
-    top: 12px;
-    min-height: 60px;
-    height: auto;
-    padding: 0 12px 0 15px;
-  }
+        /* =========================================================
+           CIVICFIX MOBILE RESPONSIVE LAYER
+           Desktop layout/functionality is intentionally unchanged.
+        ========================================================= */
 
-  .brand { font-size: 18px; gap: 8px; }
-  .mark { width: 29px; height: 29px; flex: 0 0 auto; }
-  .links { display: none; }
-  .profile-btn {
-    width: 42px; height: 42px;
-    min-width: 42px; min-height: 42px;
-  }
+        @media (max-width: 760px) {
+            html, body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
 
-  .hero { min-height: auto; padding: 120px 16px 55px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 34px; }
-  .hero-grid > * { min-width: 0; }
-  h1 { font-size: clamp(42px, 13vw, 56px); line-height: 1.02; }
-  .intro { max-width: 100%; font-size: 15px; }
+            img, svg, video, canvas {
+                max-width: 100%;
+            }
 
-  .actions { flex-wrap: wrap; gap: 10px; }
-  .report-btn, .text-link { min-height: 44px; }
-  .issue-card { width: 100%; max-width: 360px; justify-self: center; }
-  .section { padding-left: 16px; padding-right: 16px; }
-  footer { padding-left: 16px; padding-right: 16px; gap: 10px; }
+            button, a, input, select, textarea {
+                -webkit-tap-highlight-color: transparent;
+            }
 
-  .success-popup {
-    width: calc(100% - 32px);
-    max-width: 420px;
-    padding: 24px 20px;
-  }
-}
+            nav {
+                width: calc(100% - 24px);
+                max-width: none;
+                top: 12px;
+                min-height: 60px;
+                height: auto;
+                padding: 0 12px 0 15px;
+            }
 
-@media (max-width: 420px) {
-  .hero { padding-left: 14px; padding-right: 14px; }
-  .actions { flex-direction: column; align-items: stretch; }
-  .report-btn, .text-link { width: 100%; text-align: center; }
-  .issue-card { max-width: none; }
-}
-/* =========================================================
-   CIVICFIX MOBILE NAVIGATION FIX
-   Shows Home, Feedback, Info and Team on phones
-========================================================= */
+            .brand {
+                font-size: 18px;
+                gap: 8px;
+            }
 
-@media (max-width: 760px) {
+            .mark {
+                width: 29px;
+                height: 29px;
+                flex: 0 0 auto;
+            }
 
-    nav {
-        flex-wrap: wrap;
-        align-content: center;
-    }
+            .links {
+                display: none;
+            }
 
-    .links {
-        display: flex !important;
-        order: 3;
-        flex: 0 0 100%;
-        width: 100%;
-        justify-content: space-around;
-        align-items: center;
-        gap: 7px;
-        padding: 8px 0 9px;
-    }
+            .profile-btn {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                min-height: 42px;
+            }
 
-    .links a {
-        display: inline-block;
-        font-size: 12px;
-        white-space: nowrap;
-    }
+            .hero {
+                min-height: auto;
+                padding: 120px 16px 55px;
+            }
 
-    .profile-btn {
-        margin-left: auto;
-    }
-}
-</style>
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 34px;
+            }
+
+            .hero-grid > * {
+                min-width: 0;
+            }
+
+            h1 {
+                font-size: clamp(42px, 13vw, 56px);
+                line-height: 1.02;
+            }
+
+            .intro {
+                max-width: 100%;
+                font-size: 15px;
+            }
+
+            .actions {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .report-btn,
+            .text-link {
+                min-height: 44px;
+            }
+
+            .issue-card {
+                width: 100%;
+                max-width: 360px;
+                justify-self: center;
+            }
+
+            .section {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            footer {
+                padding-left: 16px;
+                padding-right: 16px;
+                gap: 10px;
+            }
+
+            .success-popup {
+                width: calc(100% - 32px);
+                max-width: 420px;
+                padding: 24px 20px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .hero {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .report-btn,
+            .text-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .issue-card {
+                max-width: none;
+            }
+        }
+
+        /* =========================================================
+           CIVICFIX MOBILE NAVIGATION FIX
+           Shows Home, Feedback, Info and Team on phones
+        ========================================================= */
+
+        @media (max-width: 760px) {
+
+            nav {
+                flex-wrap: wrap;
+                align-content: center;
+            }
+
+            .links {
+                display: flex !important;
+                order: 3;
+                flex: 0 0 100%;
+                width: 100%;
+                justify-content: space-around;
+                align-items: center;
+                gap: 7px;
+                padding: 8px 0 9px;
+            }
+
+            .links a {
+                display: inline-block;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .profile-area {
+                gap: 7px;
+            }
+
+            .profile-label {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <!-- <a href="index.html" class="civicfix-back-btn" onclick="if(history.length>1){history.back();return false;}"
-        aria-label="Go back">← Back</a> -->
-
 
     <div class="backdrop" aria-hidden="true"></div>
 
@@ -883,12 +978,19 @@
 
         <!-- MY PROFILE BUTTON -->
         <!-- Clicking this opens dashboard.html -->
-        <button type="button" class="profile-btn" id="profileInitials" title="My Profile" aria-label="My Profile"
-            onclick="window.location.href='dashbaord.html'">
 
-            <span class="profile-initials" id="profileInitialsText">?</span>
+        <div class="profile-area">
 
-        </button>
+            <span class="profile-label">My Profile</span>
+
+            <button type="button" class="profile-btn" id="profileInitials" title="My Profile"
+                aria-label="My Profile" onclick="window.location.href='dashbaord.html'">
+
+                <span class="profile-initials" id="profileInitialsText">?</span>
+
+            </button>
+
+        </div>
 
     </nav>
 
@@ -923,7 +1025,8 @@
 
                     <div class="actions">
 
-                        <button type="button" class="report-btn" onclick="window.location.href='reportissue.html'">
+                        <button type="button" class="report-btn"
+                            onclick="window.location.href='reportissue.html'">
                             Report a problem →
                         </button>
 
@@ -1095,10 +1198,11 @@
 
             </div>
 
-            <!-- <div class="stats">
+            <!--
+            <div class="stats">
 
-                <div class="stat"> -->
-            <!-- 
+                <div class="stat">
+
                     <strong>
                         14.2k
                     </strong>
@@ -1131,11 +1235,14 @@
                         residents would report again
                     </span>
 
-                </div> -->
+                </div>
+
+            </div>
+            -->
+
             CivicFix is a web-based civic issue reporting platform that allows citizens to report local problems
             such as potholes, garbage, damaged streetlights, and other public issues. The system helps
             authorities manage, track, and respond to these complaints efficiently through an admin dashboard.
-            </div>
 
         </section>
 
@@ -1160,17 +1267,31 @@
 
     <div class="success-popup-overlay" id="reportSuccessPopup" role="dialog" aria-modal="true"
         aria-labelledby="reportSuccessTitle">
+
         <div class="success-popup">
+
             <div class="success-popup-icon">✓</div>
-            <h2 id="reportSuccessTitle">Report submitted successfully!</h2>
-            <p>Your message has been received by CivicFix and is now in your report history.</p>
-            <button type="button" id="reportSuccessClose">Continue</button>
+
+            <h2 id="reportSuccessTitle">
+                Report submitted successfully!
+            </h2>
+
+            <p>
+                Your message has been received by CivicFix and is now in your report history.
+            </p>
+
+            <button type="button" id="reportSuccessClose">
+                Continue
+            </button>
+
         </div>
+
     </div>
 
     <!-- =========================
          SUPABASE
     ========================= -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- =========================
@@ -1199,29 +1320,35 @@
         });
 
 
-
         /* =========================
            SUPABASE PROFILE INITIALS
         ========================= */
+
         const SUPABASE_URL = "https://avxcoioegrebgjyauzjh.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_eab9fQepYwpTR6jNV05q3Q_wG7_V1Zi";
+
         const supabaseClient = window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_ANON_KEY
         );
 
+
         async function loadProfileInitials() {
+
             const initialsElement = document.getElementById("profileInitialsText");
             const profileButton = document.getElementById("profileInitials");
 
             if (!initialsElement || !profileButton) return;
 
             try {
+
                 const { data: userData, error: userError } =
                     await supabaseClient.auth.getUser();
 
                 if (userError || !userData?.user) {
+
                     initialsElement.textContent = "?";
+
                     return;
                 }
 
@@ -1232,63 +1359,127 @@
                     user.user_metadata?.name ||
                     "";
 
+
                 const { data: profile } = await supabaseClient
                     .from("profiles")
                     .select("full_name")
                     .eq("id", user.id)
                     .maybeSingle();
 
+
                 if (profile?.full_name) {
+
                     userName = profile.full_name;
+
                 }
 
+
                 if (!userName.trim()) {
+
                     initialsElement.textContent = "U";
-                    profileButton.setAttribute("aria-label", "My Profile - User");
+
+                    profileButton.setAttribute(
+                        "aria-label",
+                        "My Profile - User"
+                    );
+
                     return;
                 }
 
+
                 const words = userName.trim().split(/\s+/).filter(Boolean);
+
                 let initials;
 
+
                 if (words.length === 1) {
+
                     initials = words[0].charAt(0);
+
                 } else {
-                    initials = words[0].charAt(0) + words[words.length - 1].charAt(0);
+
+                    initials =
+                        words[0].charAt(0) +
+                        words[words.length - 1].charAt(0);
+
                 }
 
+
                 initials = initials.toUpperCase();
+
                 initialsElement.textContent = initials;
+
+
                 profileButton.setAttribute(
                     "aria-label",
                     `My Profile - ${userName}`
                 );
+
                 profileButton.setAttribute(
                     "title",
                     `My Profile - ${userName}`
                 );
 
+
             } catch (error) {
-                console.error("CivicFix profile initials error:", error);
+
+                console.error(
+                    "CivicFix profile initials error:",
+                    error
+                );
+
                 initialsElement.textContent = "?";
+
             }
+
         }
+
 
         loadProfileInitials();
 
-        const resultParams = new URLSearchParams(window.location.search);
-        const reportSuccessPopup = document.getElementById("reportSuccessPopup");
-        const reportSuccessClose = document.getElementById("reportSuccessClose");
+
+        const resultParams =
+            new URLSearchParams(window.location.search);
+
+        const reportSuccessPopup =
+            document.getElementById("reportSuccessPopup");
+
+        const reportSuccessClose =
+            document.getElementById("reportSuccessClose");
+
 
         if (resultParams.get("reportSuccess") === "1") {
+
             reportSuccessPopup.classList.add("show");
-            window.history.replaceState({}, document.title, "index2.html");
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "index2.html"
+            );
+
         }
 
-        reportSuccessClose.addEventListener("click", () => reportSuccessPopup.classList.remove("show"));
-        reportSuccessPopup.addEventListener("click", (event) => {
-            if (event.target === reportSuccessPopup) reportSuccessPopup.classList.remove("show");
-        });
+
+        reportSuccessClose.addEventListener(
+            "click",
+            () => reportSuccessPopup.classList.remove("show")
+        );
+
+
+        reportSuccessPopup.addEventListener(
+            "click",
+            (event) => {
+
+                if (event.target === reportSuccessPopup) {
+
+                    reportSuccessPopup.classList.remove("show");
+
+                }
+
+            }
+        );
+
     </script>
 
 </body>
