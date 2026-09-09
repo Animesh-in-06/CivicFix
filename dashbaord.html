@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CivicFix Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #23372e;
+            --leaf: #426856;
+            --lime: #c9dc8d;
+            --clay: #b86746;
+            --cream: #f4f0e6;
+            --dark: #294635;
+            --glass: rgba(255, 255, 255, .14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "DM Sans", sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND */
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+
+            background:
+                linear-gradient(120deg,
+                    rgba(17, 40, 30, .70),
+                    rgba(36, 68, 52, .40)),
+                url("https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=2200&q=85") center/cover;
+        }
+
+        .backdrop::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(180deg,
+                    rgba(28, 52, 42, .45),
+                    rgba(244, 240, 230, .96) 85%,
+                    var(--cream));
+        }
+
+        /* NAVBAR */
+
+        nav {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: min(1120px, calc(100% - 32px));
+            min-height: 68px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 10px 17px 10px 23px;
+
+            border: 1px solid rgba(255, 255, 255, .36);
+            border-radius: 22px;
+
+            background: rgba(34, 58, 46, .65);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            z-index: 100;
+
+            box-shadow:
+                0 12px 32px rgba(21, 41, 31, .16);
+
+            color: white;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: white;
+            text-decoration: none;
+
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .mark {
+            width: 32px;
+            height: 32px;
+
+            display: grid;
+            place-items: center;
+
+            color: #254233;
+            background: var(--lime);
+
+            border-radius: 10px 10px 10px 2px;
+
+            transform: rotate(-5deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 22px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, .80);
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            transition: .25s;
+        }
+
+        .nav-links a:hover {
+            color: var(--lime);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .notification span {
+            position: absolute;
+
+            top: -4px;
+            right: -5px;
+
+            width: 9px;
+            height: 9px;
+
+            background: var(--clay);
+            border-radius: 50%;
+
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            70% {
+                box-shadow:
+                    0 0 0 10px rgba(184, 103, 70, 0);
+            }
+
+            100% {
+                box-shadow:
+                    0 0 0 0 rgba(184, 103, 70, 0);
+            }
+
+        }
+
+        .user-circle {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 50%;
+
+            display: grid;
+            place-items: center;
+
+            background: var(--lime);
+            color: var(--ink);
+
+            font-weight: 700;
+        }
+
+        /* LOGOUT BUTTON */
+
+        .logout-button {
+            border: 1px solid rgba(255, 255, 255, .25);
+            background: rgba(255, 255, 255, .10);
+            color: white;
+
+            padding: 10px 14px;
+            border-radius: 11px;
+
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+        .logout-button:hover {
+            background: var(--clay);
+            border-color: var(--clay);
+            transform: translateY(-2px);
+        }
+
+        .logout-button:active {
+            transform: translateY(0);
+        }
+
+        .logout-button.loading {
+            opacity: .65;
+            pointer-events: none;
+        }
+
+        /* DASHBOARD */
+
+        .dashboard {
+            max-width: 1120px;
+            margin: auto;
+
+            padding: 145px 24px 80px;
+        }
+
+        /* WELCOME */
+
+        .welcome {
+            position: relative;
+
+            padding: 45px;
+
+            border-radius: 28px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(135deg,
+                    #294635,
+                    #426856);
+
+            color: white;
+
+            box-shadow:
+                0 25px 60px rgba(25, 50, 38, .25);
+        }
+
+        .welcome::after {
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            background: var(--lime);
+
+            opacity: .12;
+
+            right: -80px;
+            top: -120px;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            color: #e5f1b5;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: .08em;
+        }
+
+        .pulse-dot {
+            width: 9px;
+            height: 9px;
+
+            background: var(--lime);
+
+            border-radius: 50%;
+
+            animation: dotPulse 2s infinite;
+        }
+
+        @keyframes dotPulse {
+
+            70% {
+                box-shadow:
+                    0 0 0 11px rgba(201, 220, 141, 0);
+            }
+
+        }
+
+        .welcome h1 {
+            margin: 12px 0;
+
+            font-family: "Playfair Display", serif;
+
+            font-size: clamp(40px, 5vw, 65px);
+
+            letter-spacing: -.04em;
+        }
+
+        .welcome h1 span {
+            color: var(--lime);
+        }
+
+        .welcome p {
+            max-width: 600px;
+
+            color: rgba(255, 255, 255, .78);
+
+            font-size: 16px;
+
+            line-height: 1.6;
+        }
+
+        .report-button {
+            margin-top: 15px;
+
+            border: none;
+
+            padding: 14px 20px;
+
+            border-radius: 12px;
+
+            background: var(--lime);
+
+            color: var(--ink);
+
+            font-family: inherit;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+        .report-button:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 25px rgba(201, 220, 141, .30);
+        }
+
+        /* PARTY POPPERS */
+
+        .party {
+            position: absolute;
+
+            font-size: 42px;
+
+            animation:
+                partyFloat 2.5s ease-in-out infinite;
+        }
+
+        .party1 {
+            right: 80px;
+            top: 35px;
+
+            transform: rotate(-15deg);
+        }
+
+        .party2 {
+            right: 25px;
+            bottom: 30px;
+
+            transform: rotate(20deg);
+
+            animation-delay: .4s;
+        }
+
+        @keyframes partyFloat {
+
+            50% {
+                transform:
+                    translateY(-12px) rotate(10deg);
+            }
+
+        }
+
+        /* STATS */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            padding: 25px;
+
+            border-radius: 22px;
+
+            background:
+                rgba(255, 255, 255, .65);
+
+            border:
+                1px solid rgba(61, 91, 70, .12);
+
+            backdrop-filter:
+                blur(15px);
+
+            transition:
+                transform .25s;
+        }
+
+        .stat-card:hover {
+            transform:
+                translateY(-8px);
+        }
+
+        .stat-icon {
+            font-size: 26px;
+        }
+
+        .stat-card strong {
+            display: block;
+
+            margin-top: 18px;
+
+            color:
+                var(--leaf);
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            font-size: 38px;
+        }
+
+        .stat-card span {
+            display: block;
+
+            margin-top: 5px;
+
+            color: #65736b;
+
+            font-size: 14px;
+        }
+
+        /* SECTION */
+
+        .section-title {
+            margin:
+                55px 0 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+        }
+
+        .section-title h2 {
+            margin: 0;
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            font-size: 32px;
+        }
+
+        .section-title a {
+            color:
+                var(--clay);
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        /* REPORTS */
+
+        .reports {
+            display: grid;
+
+            grid-template-columns:
+                1.4fr .6fr;
+
+            gap: 22px;
+        }
+
+        .report-list {
+            padding: 25px;
+
+            border-radius: 25px;
+
+            background:
+                rgba(255, 255, 255, .72);
+
+            border:
+                1px solid rgba(61, 91, 70, .12);
+        }
+
+        .report-item {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            padding:
+                18px 0;
+
+            border-bottom:
+                1px solid rgba(61, 91, 70, .10);
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-info {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .report-icon {
+            width: 45px;
+            height: 45px;
+
+            display: grid;
+
+            place-items: center;
+
+            border-radius: 14px;
+
+            background:
+                rgba(201, 220, 141, .45);
+
+            font-size: 20px;
+        }
+
+        .report-info h3 {
+            margin: 0;
+
+            font-size: 15px;
+        }
+
+        .report-info p {
+            margin:
+                5px 0 0;
+
+            color: #6a756e;
+
+            font-size: 13px;
+        }
+
+        .status {
+            padding:
+                8px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .progress {
+            background:
+                rgba(201, 220, 141, .50);
+
+            color: var(--leaf);
+        }
+
+        .resolved {
+            background:
+                rgba(66, 104, 86, .15);
+
+            color: var(--leaf);
+        }
+
+        /* QUICK ACTION */
+
+        .quick-card {
+            padding: 28px;
+
+            border-radius: 25px;
+
+            background:
+                var(--dark);
+
+            color: white;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+        .quick-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            background:
+                var(--lime);
+
+            opacity: .12;
+
+            right: -70px;
+            bottom: -80px;
+        }
+
+        .quick-card h3 {
+            position: relative;
+
+            z-index: 1;
+
+            margin-top: 0;
+
+            font-family:
+                "Playfair Display",
+                serif;
+
+            font-size: 25px;
+        }
+
+        .quick-card p {
+            position: relative;
+
+            z-index: 1;
+
+            color:
+                rgba(255, 255, 255, .70);
+
+            line-height: 1.6;
+
+            font-size: 14px;
+        }
+
+        .quick-actions {
+            position: relative;
+
+            z-index: 1;
+
+            display: grid;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        .quick-actions button {
+            border:
+                1px solid rgba(255, 255, 255, .15);
+
+            background:
+                rgba(255, 255, 255, .08);
+
+            color: white;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            text-align: left;
+
+            font-family: inherit;
+
+            cursor: pointer;
+
+            transition: .25s;
+        }
+
+        .quick-actions button:hover {
+            background:
+                var(--lime);
+
+            color:
+                var(--ink);
+
+            transform:
+                translateX(5px);
+        }
+
+        /* CONFETTI */
+
+        .confetti-container {
+            position: fixed;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            z-index: 999;
+
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+
+            width: 10px;
+            height: 10px;
+
+            animation:
+                fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+
+            from {
+                transform:
+                    translateY(-30px) rotate(0deg);
+
+                opacity: 1;
+            }
+
+            to {
+                transform:
+                    translateY(110vh) rotate(720deg);
+
+                opacity: 0;
+            }
+
+        }
+
+        /* LOADING */
+
+        .loading {
+            opacity: .7;
+        }
+
+        /* CivicFix Back Button */
+
+        .civicfix-back-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 10000;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, .35);
+            border-radius: 12px;
+            background: rgba(35, 55, 46, .82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #fff;
+            text-decoration: none;
+            font: 700 13px/1 "DM Sans", sans-serif;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, .14);
+            transition: .2s;
+        }
+
+        .civicfix-back-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(35, 55, 46, .95);
+        }
+
+        .civicfix-back-btn:active {
+            transform: translateY(0);
+        }
+
+        @media(max-width: 850px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .reports {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+        }
+
+        @media(max-width: 650px) {
+
+            .civicfix-back-btn {
+                top: 12px;
+                left: 12px;
+                padding: 9px 12px;
+                font-size: 12px;
+            }
+
+            nav {
+                width: calc(100% - 24px);
+                padding-left: 18px;
+                padding-right: 12px;
+            }
+
+            .logout-button {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .user-circle {
+                width: 34px;
+                height: 34px;
+            }
+
+            .notification {
+                display: none;
+            }
+
+        }
+
+        @media(max-width: 550px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome {
+                padding: 30px;
+            }
+
+            .party {
+                display: none;
+            }
+
+            .report-item {
+                align-items:
+                    flex-start;
+
+                gap: 12px;
+            }
+
+            .status {
+                white-space: nowrap;
+            }
+
+            .welcome h1 {
+                font-size: 42px;
+            }
+
+        }
+
+
+        /* =========================================================
+   CIVICFIX MOBILE RESPONSIVE LAYER
+   Desktop layout/functionality is intentionally unchanged.
+========================================================= */
+        @media (max-width: 650px) {
+
+            html,
+            body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            img,
+            svg,
+            video,
+            canvas {
+                max-width: 100%;
+            }
+
+            nav {
+                width: calc(100% - 20px);
+                top: 10px;
+                min-height: 60px;
+                height: auto;
+                padding: 9px 11px 9px 15px;
+            }
+
+            .brand {
+                font-size: 18px;
+            }
+
+            .mark {
+                width: 29px;
+                height: 29px;
+            }
+
+            .logout-button {
+                min-height: 42px;
+                padding: 8px 10px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .user-circle {
+                width: 34px;
+                height: 34px;
+                flex: 0 0 auto;
+            }
+
+            .dashboard {
+                width: 100%;
+                padding: 94px 12px 55px;
+            }
+
+            .welcome {
+                padding: 26px 20px;
+                border-radius: 22px;
+            }
+
+            .welcome h1 {
+                font-size: clamp(38px, 11vw, 48px);
+                line-height: 1.04;
+            }
+
+            .welcome p {
+                font-size: 14px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                min-width: 0;
+                padding: 16px 12px;
+            }
+
+            .stat-card strong {
+                font-size: 26px;
+            }
+
+            .stat-card span {
+                font-size: 12px;
+            }
+
+            .reports {
+                grid-template-columns: 1fr;
+            }
+
+            .report-list {
+                min-width: 0;
+            }
+
+            .report-item {
+                min-width: 0;
+                grid-template-columns: auto minmax(0, 1fr);
+                padding: 15px;
+                gap: 11px;
+            }
+
+            .report-info {
+                min-width: 0;
+            }
+
+            .report-info h3,
+            .report-info p {
+                overflow-wrap: anywhere;
+            }
+
+            .status {
+                max-width: 100%;
+                white-space: normal;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions button {
+                min-height: 48px;
+            }
+
+            .civicfix-back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .welcome {
+                padding: 24px 17px;
+            }
+        }
+
+
+
+        /* CIVICFIX PAGE OPEN ANIMATION */
+        @keyframes civicfixPageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+                filter: blur(3px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        body {
+            animation: civicfixPageFadeIn .65s cubic-bezier(.22, 1, .36, 1) both;
+        }
+
+        @media (max-width: 650px) {
+            nav {
+                flex-wrap: wrap;
+                align-content: center;
+            }
+
+            .nav-links {
+                display: flex !important;
+                order: 3;
+                flex: 0 0 100%;
+                width: 100%;
+                justify-content: space-around;
+                gap: 6px;
+                padding: 7px 0 2px;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .profile {
+                margin-left: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body {
+                animation: none !important;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <a href="index.html" class="civicfix-back-btn" onclick="if(history.length>1){history.back();return false;}"
+        aria-label="Go back">
+        ← Back
+    </a>
+
+    <!-- BACKGROUND -->
+
+    <div class="backdrop"></div>
+
+    <!-- CONFETTI -->
+
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <a href="dashbaord.html" class="brand">
+
+            <span class="mark">✦</span>
+
+            CivicFix
+
+        </a>
+
+        <div class="nav-links">
+
+            <a href="dashbaord.html">
+                Dashboard
+            </a>
+
+            <a href="myreports.html">
+                My Reports
+            </a>
+
+            <a href="feedback.html">
+                Feedback
+            </a>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="notification">
+                🔔
+                <span></span>
+            </div>
+
+            <button class="logout-button" id="logoutButton">
+                Logout
+            </button>
+
+            <div class="user-circle" id="userInitial">
+                U
+            </div>
+
+        </div>
+
+    </nav>
+
+    <!-- MAIN DASHBOARD -->
+
+    <main class="dashboard">
+
+        <!-- WELCOME -->
+
+        <section class="welcome">
+
+            <div class="party party1">
+                🎉
+            </div>
+
+            <div class="party party2">
+                🎊
+            </div>
+
+            <div class="welcome-content">
+
+                <div class="eyebrow">
+
+                    <span class="pulse-dot"></span>
+
+                    Your civic dashboard
+
+                </div>
+
+                <h1>
+                    Hiii,
+                    <span id="username">
+                        User
+                    </span>
+                    ! 👋
+                </h1>
+
+                <p>
+                    Welcome back! Your actions are helping make
+                    your neighbourhood safer, cleaner and better.
+                    Let's create some real change today.
+                </p>
+
+                <button class="report-button" id="reportButton">
+                    + Report a new issue
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- STATS -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📝
+                </div>
+
+                <strong id="totalReports">
+                    0
+                </strong>
+
+                <span>
+                    Total Reports
+                </span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⏳
+                </div>
+
+                <strong id="progressReports">
+                    0
+                </strong>
+
+                <span>
+                    In Progress
+                </span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+                <strong id="resolvedReports">
+                    0
+                </strong>
+
+                <span>
+                    Issues Resolved
+                </span>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🌱
+                </div>
+
+                <strong id="impactScore">
+                    0%
+                </strong>
+
+                <span>
+                    Your Impact
+                </span>
+
+            </div>
+
+        </section>
+
+        <!-- RECENT REPORTS TITLE -->
+
+        <div class="section-title">
+
+            <h2>
+                Recent reports
+            </h2>
+
+            <a href="myreports.html">
+                View all →
+            </a>
+
+        </div>
+
+        <!-- REPORTS -->
+
+        <section class="reports">
+
+            <div class="report-list" id="reportList">
+
+                <div class="report-item">
+
+                    <div class="report-info">
+
+                        <div class="report-icon">
+                            🕳️
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Loading reports...
+                            </h3>
+
+                            <p>
+                                Please wait
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <span class="status progress">
+                        Loading
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- QUICK ACTION CARD -->
+
+            <div class="quick-card">
+
+                <h3>
+                    Make an impact ✦
+                </h3>
+
+                <p>
+                    Every report brings your community
+                    one step closer to real change.
+                </p>
+
+                <div class="quick-actions">
+
+                    <button onclick="window.location.href='reportissue.html'">
+                        📸 Upload an issue
+                    </button>
+
+                    <button onclick="window.location.href='myreports.html'">
+                        📍 View my reports
+                    </button>
+
+                    <button onclick="window.location.href='feedback.html'">
+                        💬 Give feedback
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        const supabaseClient = supabase.createClient(
+            "https://avxcoioegrebgjyauzjh.supabase.co",
+            "sb_publishable_eab9fQepYwpTR6jNV05q3Q_wG7_V1Zi"
+        );
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function issueIcon(type) {
+
+            return {
+                Pothole: "🕳️",
+                Streetlight: "💡",
+                Garbage: "🗑️",
+                Water: "💧",
+                Road: "🛣️",
+                Other: "⚠️"
+            }[type] || "📌";
+
+        }
+
+        function relativeDate(value) {
+
+            const seconds = Math.max(
+                0,
+                Math.floor(
+                    (Date.now() - new Date(value).getTime()) / 1000
+                )
+            );
+
+            if (seconds < 60)
+                return "Just now";
+
+            if (seconds < 3600)
+                return `${Math.floor(seconds / 60)} min ago`;
+
+            if (seconds < 86400)
+                return `${Math.floor(seconds / 3600)} hours ago`;
+
+            if (seconds < 172800)
+                return "Yesterday";
+
+            return `${Math.floor(seconds / 86400)} days ago`;
+        }
+
+        function statusClass(status) {
+
+            const value = String(status || "").toLowerCase();
+
+            if (
+                value.includes("finished") ||
+                value.includes("resolved")
+            ) {
+                return "resolved";
+            }
+
+            return "progress";
+        }
+
+        async function loadDashboard() {
+
+            const {
+                data: userData,
+                error: userError
+            } = await supabaseClient.auth.getUser();
+
+            const user = userData?.user;
+
+            if (userError || !user) {
+
+                window.location.href = "login.html";
+
+                return;
+            }
+
+            let userName =
+                user.user_metadata?.full_name ||
+                user.user_metadata?.name ||
+                "User";
+
+            const {
+                data: profile
+            } = await supabaseClient
+                .from("profiles")
+                .select("full_name")
+                .eq("id", user.id)
+                .maybeSingle();
+
+            if (profile?.full_name) {
+                userName = profile.full_name;
+            }
+
+            document.getElementById("username").textContent =
+                userName;
+
+            document.getElementById("userInitial").textContent =
+                userName.trim().charAt(0).toUpperCase() || "U";
+
+            const {
+                data: reports,
+                error: reportsError
+            } = await supabaseClient
+                .from("reports")
+                .select(
+                    "id, issue_type, location, status, created_at"
+                )
+                .eq("user_id", user.id)
+                .order("created_at", {
+                    ascending: false
+                });
+
+            if (reportsError) {
+
+                console.error(
+                    "Could not load reports:",
+                    reportsError
+                );
+
+                document.getElementById("reportList").innerHTML = `
+                    <div style="padding:25px 0;text-align:center;color:#6a756e;">
+                        Could not load your reports.
+                    </div>
+                `;
+
+                return;
+            }
+
+            const total = reports.length;
+
+            const resolved = reports.filter(r => {
+
+                const status =
+                    String(r.status || "").toLowerCase();
+
+                return (
+                    status.includes("finished") ||
+                    status.includes("resolved")
+                );
+
+            }).length;
+
+            const progress = reports.filter(r => {
+
+                const status =
+                    String(r.status || "").toLowerCase();
+
+                return [
+                    "pending",
+                    "in review",
+                    "in process",
+                    "in progress"
+                ].includes(status);
+
+            }).length;
+
+            document.getElementById("totalReports").textContent =
+                total;
+
+            document.getElementById("progressReports").textContent =
+                progress;
+
+            document.getElementById("resolvedReports").textContent =
+                resolved;
+
+            document.getElementById("impactScore").textContent =
+                `${total ? Math.round((resolved / total) * 100) : 0}%`;
+
+            const list =
+                document.getElementById("reportList");
+
+            if (!reports.length) {
+
+                list.innerHTML = `
+                    <div style="padding:25px 0;text-align:center;color:#6a756e;">
+                        No reports yet. Your first report can make a difference. 🌱
+                    </div>
+                `;
+
+                return;
+            }
+
+            list.innerHTML = reports
+                .slice(0, 10)
+                .map(report => `
+
+                    <div class="report-item">
+
+                        <div class="report-info">
+
+                            <div class="report-icon">
+                                ${issueIcon(report.issue_type)}
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    ${escapeHtml(
+                    report.issue_type ||
+                    "Community issue"
+                )}
+                                </h3>
+
+                                <p>
+                                    ${escapeHtml(
+                    report.location ||
+                    "Location not provided"
+                )}
+                                    ·
+                                    ${relativeDate(report.created_at)}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <span class="status ${statusClass(report.status)}">
+                            ${escapeHtml(
+                    report.status || "Pending"
+                )}
+                        </span>
+
+                    </div>
+
+                `)
+                .join("");
+
+        }
+
+        /* LOGOUT */
+
+        document
+            .getElementById("logoutButton")
+            .addEventListener("click", async () => {
+
+                const button =
+                    document.getElementById("logoutButton");
+
+                button.classList.add("loading");
+                button.textContent = "Logging out...";
+
+                try {
+
+                    const { error } =
+                        await supabaseClient.auth.signOut();
+
+                    if (error) {
+
+                        console.error(
+                            "Logout error:",
+                            error
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Unexpected logout error:",
+                        error
+                    );
+
+                } finally {
+
+                    window.location.replace("index.html");
+
+                }
+
+            });
+
+        document
+            .getElementById("reportButton")
+            .addEventListener("click", () => {
+
+                window.location.href =
+                    "reportissue.html";
+
+            });
+
+        const container =
+            document.getElementById("confettiContainer");
+
+        const colors = [
+            "#c9dc8d",
+            "#b86746",
+            "#426856",
+            "#ffffff",
+            "#f4f0e6"
+        ];
+
+        function createConfetti() {
+
+            for (let i = 0; i < 80; i++) {
+
+                const confetti =
+                    document.createElement("div");
+
+                confetti.classList.add("confetti");
+
+                confetti.style.left =
+                    Math.random() * 100 + "vw";
+
+                confetti.style.background =
+                    colors[
+                    Math.floor(
+                        Math.random() * colors.length
+                    )
+                    ];
+
+                confetti.style.animationDelay =
+                    Math.random() * 1.5 + "s";
+
+                confetti.style.transform =
+                    `rotate(${Math.random() * 360}deg)`;
+
+                container.appendChild(confetti);
+
+                setTimeout(
+                    () => confetti.remove(),
+                    5000
+                );
+
+            }
+
+        }
+
+        loadDashboard();
+
+        window.addEventListener("load", () => {
+
+            setTimeout(
+                createConfetti,
+                300
+            );
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicFix — Feedback</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --green:#23372e;
+      --green-2:#355447;
+      --cream:#f6f2e9;
+      --paper:#fffdf8;
+      --line:#ddd7ca;
+      --text:#24302a;
+      --muted:#6d756f;
+      --gold:#d6a94a;
+      --danger:#a94442;
+      --shadow:0 18px 50px rgba(35,55,46,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(214,169,74,.13), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(53,84,71,.12), transparent 28%),
+        var(--cream);
+      color:var(--text);
+      font-family:"DM Sans",sans-serif;
+    }
+
+    .civicfix-back-btn{
+      position:fixed;
+      top:18px;
+      left:18px;
+      z-index:10000;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.35);
+      border-radius:12px;
+      background:rgba(35,55,46,.88);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      color:#fff;
+      text-decoration:none;
+      font:700 13px/1 "DM Sans",sans-serif;
+      box-shadow:0 8px 22px rgba(0,0,0,.14);
+      transition:.2s;
+    }
+
+    .civicfix-back-btn:hover{
+      transform:translateY(-2px);
+      background:rgba(35,55,46,.98);
+    }
+
+    .civicfix-back-btn:active{transform:translateY(0)}
+
+    header{
+      min-height:88px;
+      background:var(--green);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:20px 6%;
+      padding-left:130px;
+      box-shadow:0 5px 20px rgba(0,0,0,.1);
+    }
+
+    .brand{
+      font-family:"Playfair Display",serif;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+
+    .brand span{color:#e6c36c}
+
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .user-badge{
+      padding:9px 14px;
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:999px;
+      font-size:13px;
+      color:#f7f4ec;
+      background:rgba(255,255,255,.06);
+    }
+
+    .logout-btn{
+      border:1px solid rgba(255,255,255,.28);
+      background:transparent;
+      color:#fff;
+      padding:9px 14px;
+      border-radius:10px;
+      font:700 13px "DM Sans",sans-serif;
+      cursor:pointer;
+    }
+
+    .logout-btn:hover{background:rgba(255,255,255,.1)}
+
+    main{
+      width:min(960px,92%);
+      margin:52px auto 70px;
+    }
+
+    .hero{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .eyebrow{
+      display:inline-block;
+      color:var(--green-2);
+      background:rgba(53,84,71,.08);
+      border:1px solid rgba(53,84,71,.12);
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    h1{
+      font-family:"Playfair Display",serif;
+      font-size:44px;
+      line-height:1.1;
+      color:var(--green);
+      margin-bottom:12px;
+    }
+
+    .hero p{
+      max-width:650px;
+      margin:auto;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
+    }
+
+    .feedback-card{
+      background:rgba(255,253,248,.94);
+      border:1px solid rgba(221,215,202,.95);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:34px;
+    }
+
+    .section-title{
+      color:var(--green);
+      font-size:20px;
+      font-weight:800;
+      margin-bottom:7px;
+    }
+
+    .section-subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:24px;
+    }
+
+    .rating-wrap{
+      margin-bottom:25px;
+    }
+
+    .rating-label{
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:11px;
+      display:block;
+    }
+
+    .stars{
+      display:flex;
+      gap:7px;
+      flex-direction:row-reverse;
+      justify-content:flex-end;
+      width:max-content;
+    }
+
+    .stars input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .stars label{
+      font-size:38px;
+      color:#d4cec0;
+      cursor:pointer;
+      transition:.15s;
+      line-height:1;
+    }
+
+    .stars label:hover,
+    .stars label:hover ~ label,
+    .stars input:checked ~ label{
+      color:var(--gold);
+      transform:scale(1.04);
+    }
+
+    .rating-text{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:7px;
+      min-height:18px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .field.full{grid-column:1/-1}
+
+    label.field-label{
+      display:block;
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    select,
+    textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:13px;
+      background:#fff;
+      color:var(--text);
+      font:500 14px "DM Sans",sans-serif;
+      outline:none;
+      transition:.2s;
+    }
+
+    select{
+      height:48px;
+      padding:0 13px;
+    }
+
+    textarea{
+      min-height:150px;
+      resize:vertical;
+      padding:14px;
+      line-height:1.6;
+    }
+
+    select:focus,
+    textarea:focus{
+      border-color:var(--green-2);
+      box-shadow:0 0 0 4px rgba(53,84,71,.09);
+    }
+
+    .char-count{
+      text-align:right;
+      color:var(--muted);
+      font-size:11px;
+      margin-top:5px;
+    }
+
+    .submit-row{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:15px;
+      margin-top:24px;
+      padding-top:22px;
+      border-top:1px solid var(--line);
+    }
+
+    .status-message{
+      flex:1;
+      font-size:13px;
+      min-height:20px;
+    }
+
+    .status-message.success{color:#2d6848}
+    .status-message.error{color:var(--danger)}
+
+    .submit-btn{
+      border:0;
+      border-radius:13px;
+      padding:13px 24px;
+      background:var(--green);
+      color:#fff;
+      font:800 14px "DM Sans",sans-serif;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(35,55,46,.18);
+      transition:.2s;
+    }
+
+    .submit-btn:hover{
+      background:var(--green-2);
+      transform:translateY(-1px);
+    }
+
+    .submit-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .info-box{
+      margin-top:22px;
+      padding:15px 17px;
+      border-radius:13px;
+      background:#f4f0e7;
+      color:#626b64;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .toast{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      z-index:10001;
+      max-width:360px;
+      padding:14px 18px;
+      border-radius:13px;
+      background:var(--green);
+      color:#fff;
+      box-shadow:0 15px 35px rgba(0,0,0,.2);
+      font-size:13px;
+      font-weight:700;
+      opacity:0;
+      transform:translateY(15px);
+      pointer-events:none;
+      transition:.25s;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .loading{
+      opacity:.65;
+      pointer-events:none;
+    }
+
+    @media(max-width:700px){
+      header{
+        padding:18px 5%;
+        padding-left:100px;
+      }
+
+      .brand{font-size:23px}
+
+      .user-badge{display:none}
+
+      main{
+        margin-top:35px;
+      }
+
+      h1{font-size:35px}
+
+      .feedback-card{
+        padding:23px 18px;
+        border-radius:19px;
+      }
+
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .field.full{grid-column:auto}
+
+      .submit-row{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .submit-btn{
+        width:100%;
+      }
+
+      .civicfix-back-btn{
+        top:12px;
+        left:12px;
+        padding:9px 12px;
+        font-size:12px;
+      }
+    }
+  
+
+/* =========================================================
+   CIVICFIX MOBILE RESPONSIVE LAYER
+   Desktop layout/functionality is intentionally unchanged.
+========================================================= */
+@media (max-width: 700px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  img, svg, video, canvas { max-width: 100%; }
+
+  header {
+    min-height: 72px;
+    padding: 14px 12px 14px 92px;
+    gap: 10px;
+  }
+  .brand { font-size: 21px; }
+  .header-right { gap: 8px; }
+  .logout-btn { min-height: 42px; padding: 9px 11px; }
+
+  main {
+    width: calc(100% - 24px);
+    margin: 28px auto 45px;
+  }
+  h1 { font-size: clamp(34px, 10vw, 42px); }
+  .hero p { font-size: 14px; }
+
+  .feedback-card {
+    padding: 20px 15px;
+    border-radius: 18px;
+  }
+  .stars label { font-size: 34px; }
+  .form-grid { grid-template-columns: 1fr; gap: 15px; }
+  .field.full { grid-column: auto; }
+
+  select, textarea {
+    min-height: 46px;
+    font-size: 16px;
+  }
+  textarea { min-height: 145px; }
+
+  .submit-row {
+    gap: 12px;
+    align-items: stretch;
+  }
+  .submit-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .civicfix-back-btn {
+    top: 10px;
+    left: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 390px) {
+  header { padding-left: 88px; }
+  .brand { font-size: 19px; }
+  main { width: calc(100% - 20px); }
+}
+
+
+
+    /* CIVICFIX PAGE OPEN ANIMATION */
+    @keyframes civicfixPageFadeIn {
+      from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    body {
+      animation: civicfixPageFadeIn .65s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none !important; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <a href="index.html"
+     class="civicfix-back-btn"
+     onclick="if(history.length>1){history.back();return false;}"
+     aria-label="Go back">← Back</a>
+
+  <header>
+    <div class="brand">Civic<span>Fix</span></div>
+
+    <div class="header-right">
+      <div class="user-badge" id="userBadge">Checking account...</div>
+      <button class="logout-btn" id="logoutBtn" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Help us improve</div>
+      <h1>Share Your Feedback</h1>
+      <p>
+        Your feedback helps CivicFix become a better and more useful platform
+        for reporting and tracking civic issues in your community.
+      </p>
+    </section>
+
+    <section class="feedback-card">
+      <div class="section-title">Tell us what you think</div>
+      <div class="section-subtitle">
+        Rate your experience and share any suggestions, problems, or ideas.
+      </div>
+
+      <form id="feedbackForm">
+        <div class="rating-wrap">
+          <span class="rating-label">How would you rate CivicFix?</span>
+
+          <div class="stars" aria-label="Rating from 1 to 5">
+            <input type="radio" id="star5" name="rating" value="5">
+            <label for="star5" title="Excellent">★</label>
+
+            <input type="radio" id="star4" name="rating" value="4">
+            <label for="star4" title="Very good">★</label>
+
+            <input type="radio" id="star3" name="rating" value="3">
+            <label for="star3" title="Good">★</label>
+
+            <input type="radio" id="star2" name="rating" value="2">
+            <label for="star2" title="Fair">★</label>
+
+            <input type="radio" id="star1" name="rating" value="1">
+            <label for="star1" title="Poor">★</label>
+          </div>
+
+          <div class="rating-text" id="ratingText">Please select a rating.</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="feedbackType">Feedback type</label>
+            <select id="feedbackType" required>
+              <option value="General">General</option>
+              <option value="Report Issue">Report Issue</option>
+              <option value="Website">Website</option>
+              <option value="Suggestion">Suggestion</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="feedbackTopic">What is this about?</label>
+            <select id="feedbackTopic">
+              <option value="Overall experience">Overall experience</option>
+              <option value="Reporting an issue">Reporting an issue</option>
+              <option value="Tracking reports">Tracking reports</option>
+              <option value="Dashboard">Dashboard</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label class="field-label" for="message">Your feedback</label>
+            <textarea
+              id="message"
+              maxlength="1000"
+              placeholder="Write your feedback here..."
+              required></textarea>
+            <div class="char-count"><span id="charCount">0</span>/1000</div>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <div class="status-message" id="statusMessage"></div>
+          <button class="submit-btn" id="submitBtn" type="submit">
+            Submit Feedback
+          </button>
+        </div>
+      </form>
+
+      <div class="info-box">
+        Your feedback is securely associated with your CivicFix account and
+        stored in Supabase. Please do not include passwords, OTPs, or other
+        sensitive information in your message.
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      "https://avxcoioegrebgjyauzjh.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+      "sb_publishable_eab9fQepYwpTR6jNV05q3Q_wG7_V1Zi";
+
+    const supabaseClient =
+      window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const feedbackForm = document.getElementById("feedbackForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const statusMessage = document.getElementById("statusMessage");
+    const userBadge = document.getElementById("userBadge");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const messageInput = document.getElementById("message");
+    const charCount = document.getElementById("charCount");
+    const ratingText = document.getElementById("ratingText");
+    const toast = document.getElementById("toast");
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    const ratingLabels = {
+      1: "Poor",
+      2: "Fair",
+      3: "Good",
+      4: "Very good",
+      5: "Excellent"
+    };
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    function setStatus(message, type = "") {
+      statusMessage.textContent = message;
+      statusMessage.className = "status-message" + (type ? " " + type : "");
+    }
+
+    function getPhoneFromProfile(profile) {
+      if (!profile) return "";
+      return profile.phone || "";
+    }
+
+    async function loadUser() {
+      const { data: { user }, error: userError } =
+        await supabaseClient.auth.getUser();
+
+      if (userError || !user) {
+        window.location.replace("login.html");
+        return false;
+      }
+
+      currentUser = user;
+
+      const { data: profile, error: profileError } =
+        await supabaseClient
+          .from("profiles")
+          .select("id, full_name, phone")
+          .eq("id", user.id)
+          .maybeSingle();
+
+      if (profileError) {
+        console.warn("Could not load profile:", profileError);
+      }
+
+      currentProfile = profile || null;
+
+      const name =
+        currentProfile?.full_name ||
+        user.user_metadata?.full_name ||
+        "CivicFix User";
+
+      userBadge.textContent = name;
+
+      return true;
+    }
+
+    document.querySelectorAll('input[name="rating"]').forEach(input => {
+      input.addEventListener("change", () => {
+        ratingText.textContent = ratingLabels[input.value];
+      });
+    });
+
+    messageInput.addEventListener("input", () => {
+      charCount.textContent = messageInput.value.length;
+    });
+
+    feedbackForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      setStatus("");
+
+      if (!currentUser) {
+        setStatus("Please log in before submitting feedback.", "error");
+        return;
+      }
+
+      const selectedRating =
+        document.querySelector('input[name="rating"]:checked');
+
+      if (!selectedRating) {
+        setStatus("Please select a rating from 1 to 5 stars.", "error");
+        return;
+      }
+
+      const message = messageInput.value.trim();
+
+      if (!message) {
+        setStatus("Please enter your feedback.", "error");
+        return;
+      }
+
+      const feedbackType =
+        document.getElementById("feedbackType").value;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      feedbackForm.classList.add("loading");
+
+      const payload = {
+        user_id: currentUser.id,
+        name:
+          currentProfile?.full_name ||
+          currentUser.user_metadata?.full_name ||
+          "CivicFix User",
+        phone: getPhoneFromProfile(currentProfile),
+        rating: Number(selectedRating.value),
+        feedback_type: feedbackType,
+        message: message
+      };
+
+      const { error } =
+        await supabaseClient
+          .from("feedback")
+          .insert(payload);
+
+      feedbackForm.classList.remove("loading");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Feedback";
+
+      if (error) {
+        console.error("Feedback insert error:", error);
+        setStatus(
+          "Could not submit your feedback. Please check that the feedback table and Supabase policies are set up.",
+          "error"
+        );
+        return;
+      }
+
+      setStatus(
+        "Thank you! Your feedback has been submitted successfully.",
+        "success"
+      );
+
+      showToast("Feedback submitted successfully!");
+
+      feedbackForm.reset();
+      charCount.textContent = "0";
+      ratingText.textContent = "Please select a rating.";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabaseClient.auth.signOut();
+      window.location.replace("index.html");
+    });
+
+    (async function init() {
+      await loadUser();
+    })();
+  </script>
+</body>
+</html>

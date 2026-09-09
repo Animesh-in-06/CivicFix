@@ -1,0 +1,2911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CivicFix — Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #23372e;
+      --leaf: #426856;
+      --lime: #c9dc8d;
+      --clay: #b86746;
+      --cream: #f4f0e6;
+      --white: #fff;
+      --muted: #6a756e;
+      --line: #dfe5dc;
+      --shadow: 0 18px 50px rgba(35, 55, 46, .12)
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    .auth-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #23372e, #426856 55%, #71845a)
+    }
+
+    .auth-card {
+      width: min(460px, 100%);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 28px;
+      padding: 38px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .22)
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 700
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: var(--lime);
+      border-radius: 11px 11px 11px 3px;
+      color: #254233
+    }
+
+    .eyebrow {
+      margin: 28px 0 7px;
+      color: var(--clay);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase
+    }
+
+    .auth-card h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 38px;
+      margin: 0 0 10px
+    }
+
+    .auth-card p {
+      color: var(--muted);
+      line-height: 1.6
+    }
+
+    .field {
+      margin-top: 18px
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid #ccd6ce;
+      border-radius: 13px;
+      outline: none;
+      background: #fff
+    }
+
+    .field input:focus {
+      border-color: var(--leaf);
+      box-shadow: 0 0 0 3px rgba(66, 104, 86, .1)
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 22px;
+      border: 0;
+      border-radius: 13px;
+      padding: 14px 18px;
+      background: var(--leaf);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .primary:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px
+    }
+
+    .message.show {
+      display: block
+    }
+
+    .message.error {
+      background: #fde8e2;
+      color: #8b3923
+    }
+
+    .message.success {
+      background: #eaf4df;
+      color: #315b37
+    }
+
+    .app {
+      display: none;
+      min-height: 100vh
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(35, 55, 46, .96);
+      color: #fff;
+      padding: 14px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .12)
+    }
+
+    .topbar-inner {
+      width: min(1240px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px
+    }
+
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 20px
+    }
+
+    .admin-pill {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(201, 220, 141, .18);
+      color: var(--lime);
+      padding: 7px 10px;
+      border-radius: 999px
+    }
+
+    .logout {
+      border: 1px solid rgba(255, 255, 255, .25);
+      background: transparent;
+      color: #fff;
+      padding: 9px 13px;
+      border-radius: 10px;
+      cursor: pointer
+    }
+
+    .layout {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 24px
+    }
+
+    .sidebar {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      height: max-content;
+      position: sticky;
+      top: 88px;
+      box-shadow: var(--shadow)
+    }
+
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      padding: 13px 14px;
+      border-radius: 12px;
+      color: var(--ink);
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 4px
+    }
+
+    .nav-btn.active,
+    .nav-btn:hover {
+      background: #edf4e5;
+      color: #315640
+    }
+
+    .content h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 40px;
+      margin: 0 0 6px
+    }
+
+    .content-sub {
+      color: var(--muted);
+      margin: 0 0 24px
+    }
+
+    .section {
+      display: none
+    }
+
+    .section.active {
+      display: block
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 22px
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow)
+    }
+
+    .stat .num {
+      font-size: 32px;
+      font-weight: 700
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden
+    }
+
+    .panel-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .panel-head h2 {
+      font-size: 18px;
+      margin: 0
+    }
+
+    .search,
+    .filter {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      outline: none
+    }
+
+    .table-wrap {
+      overflow: auto
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px
+    }
+
+    .table th,
+    .table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #edf0ec;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle
+    }
+
+    .table th {
+      background: #fafbf8;
+      color: #607067;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .7px
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0
+    }
+
+    .count-note {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .status.pending {
+      background: #fff2d8;
+      color: #8b6215
+    }
+
+    .status.progress {
+      background: #e5effa;
+      color: #315c88
+    }
+
+    .status.resolved {
+      background: #e5f3e2;
+      color: #39703e
+    }
+
+    .status.other {
+      background: #eee;
+      color: #555
+    }
+
+    .thumb {
+      width: 58px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #edf0ec;
+      display: block
+    }
+
+    .no-image {
+      font-size: 11px;
+      color: #89938d
+    }
+
+    .view-btn {
+      border: 0;
+      background: #edf4e5;
+      color: #315640;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      color: var(--muted)
+    }
+
+    /* Feedback */
+    .feedback-message {
+      max-width: 420px;
+      white-space: normal;
+      line-height: 1.5
+    }
+
+    .rating-stars {
+      color: #d6a94a;
+      font-size: 18px;
+      letter-spacing: 1px;
+      white-space: nowrap
+    }
+
+    .feedback-type {
+      display: inline-block;
+      background: #edf4e5;
+      color: #315640;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 31, 26, .65);
+      z-index: 50;
+      place-items: center;
+      padding: 20px
+    }
+
+    .modal.show {
+      display: grid
+    }
+
+    .modal-card {
+      width: min(800px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 22px;
+      padding: 22px
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center
+    }
+
+    .modal-top h2 {
+      margin: 0;
+      font-size: 22px
+    }
+
+    .close {
+      border: 0;
+      background: #eef1ed;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-size: 20px
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px
+    }
+
+    .detail {
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px
+    }
+
+    .detail small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 5px
+    }
+
+    .detail strong {
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-word
+    }
+
+    .detail.full {
+      grid-column: 1/-1
+    }
+
+    .evidence {
+      margin-top: 18px
+    }
+
+    .evidence img {
+      max-width: 100%;
+      max-height: 430px;
+      border-radius: 14px;
+      display: block
+    }
+
+    .report-actions {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap
+    }
+
+    .action-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .action-group select {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .save-status-btn,
+    .delete-report-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .save-status-btn {
+      background: var(--leaf);
+      color: #fff
+    }
+
+    .delete-report-btn {
+      background: #fde8e2;
+      color: #8b3923
+    }
+
+    .save-status-btn:disabled,
+    .delete-report-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #23372e;
+      color: #fff;
+      padding: 13px 16px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 80
+    }
+
+    .toast.show {
+      display: block
+    }
+
+    @media(max-width:800px) {
+      .layout {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        position: static;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto
+      }
+
+      .nav-btn {
+        width: auto;
+        white-space: nowrap;
+        margin-bottom: 0
+      }
+
+      .stats {
+        grid-template-columns: 1fr
+      }
+
+      .detail-grid {
+        grid-template-columns: 1fr
+      }
+
+      .detail.full {
+        grid-column: auto
+      }
+
+      .topbar-inner {
+        flex-wrap: wrap
+      }
+    }
+
+    /* CivicFix Back Button */
+    .civicfix-back-btn {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 10000;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, .35);
+      border-radius: 12px;
+      background: rgba(35, 55, 46, .82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff;
+      text-decoration: none;
+      font: 700 13px/1 "DM Sans", sans-serif;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .14);
+      transition: .2s
+    }
+
+    .civicfix-back-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(35, 55, 46, .95)
+    }
+
+    .civicfix-back-btn:active {
+      transform: translateY(0)
+    }
+
+    @media(max-width:650px) {
+      .civicfix-back-btn {
+        top: 12px;
+        left: 12px;
+        padding: 9px 12px;
+        font-size: 12px
+      }
+    }
+  
+
+/* =========================================================
+   CIVICFIX MOBILE RESPONSIVE LAYER
+   Desktop layout/functionality is intentionally unchanged.
+========================================================= */
+@media (max-width: 800px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  img, svg, video, canvas { max-width: 100%; }
+
+  .topbar { padding: 11px 14px; }
+  .topbar-inner { width: 100%; gap: 10px; }
+  .top-brand { min-width: 0; }
+  .admin-pill { white-space: nowrap; }
+  .logout { white-space: nowrap; }
+
+  .layout {
+    width: 100%;
+    padding: 18px 12px 45px;
+    gap: 16px;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .nav-btn { flex: 0 0 auto; min-height: 44px; }
+
+  .content, .panel, .section { min-width: 0; }
+  .stats { grid-template-columns: 1fr; }
+  .panel { overflow: hidden; }
+
+  .panel-head {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .search, .filter { width: 100%; max-width: 100%; }
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table { min-width: 680px; }
+
+  .modal {
+    padding: 14px;
+  }
+  .modal-card {
+    width: min(100%, 620px);
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+  }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail.full { grid-column: auto; }
+  .evidence img { max-height: 300px; object-fit: contain; }
+  .action-buttons { flex-wrap: wrap; }
+  .save-status-btn, .delete-report-btn { min-height: 44px; }
+
+  .civicfix-back-btn {
+    top: 12px;
+    left: 12px;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-inner { align-items: flex-start; }
+  .top-brand { font-size: 17px; }
+  .admin-pill { font-size: 9px; padding: 6px 8px; }
+  .logout { padding: 8px 10px; font-size: 12px; }
+  .layout { padding-left: 10px; padding-right: 10px; }
+  .panel { border-radius: 16px; }
+  .panel-head { padding: 14px; }
+  .content h1 { font-size: 30px; }
+}
+
+
+
+    /* CIVICFIX PAGE OPEN ANIMATION */
+    @keyframes civicfixPageFadeIn {
+      from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    body {
+      animation: civicfixPageFadeIn .65s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none !important; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <a href="index.html" class="civicfix-back-btn" onclick="if(history.length>1){history.back();return false;}"
+    aria-label="Go back">
+    ← Back
+  </a>
+
+  <!-- ADMIN LOGIN -->
+  <div class="auth-wrap" id="authView">
+    <div class="auth-card">
+
+      <div class="brand">
+        <span class="mark">✓</span>
+        <span>CivicFix</span>
+      </div>
+
+      <div class="eyebrow">Administration</div>
+
+      <h1>Admin Login</h1>
+
+      <p>
+        Sign in with an authorized CivicFix administrator account.
+      </p>
+
+      <form id="adminForm">
+
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" type="tel" placeholder="+91 9876543210" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Your password" required>
+        </div>
+
+        <button class="primary" id="loginBtn" type="submit">
+          Sign in to Admin
+        </button>
+
+        <div class="message" id="authMessage"></div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ADMIN APP -->
+  <div class="app" id="appView">
+
+    <header class="topbar">
+      <div class="topbar-inner">
+
+        <div class="top-brand">
+          <span class="mark">✓</span>
+          <span>CivicFix Admin</span>
+          <span class="admin-pill">Administrator</span>
+        </div>
+
+        <button class="logout" id="logoutBtn">
+          Log out
+        </button>
+
+      </div>
+    </header>
+
+
+    <div class="layout">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+
+        <button class="nav-btn active" data-section="users">
+          👥 Users
+        </button>
+
+        <button class="nav-btn" data-section="reports">
+          📋 Issues / Reports
+        </button>
+
+        <!-- NEW FEEDBACK BUTTON -->
+        <button class="nav-btn" data-section="feedback">
+          💬 User Feedback
+        </button>
+
+      </aside>
+
+
+      <main class="content">
+
+        <!-- USERS SECTION -->
+        <section class="section active" id="usersSection">
+
+          <h1>Users</h1>
+
+          <p class="content-sub">
+            View the CivicFix community accounts registered in the system.
+          </p>
+
+          <div class="stats">
+
+            <div class="stat">
+              <div class="num" id="userCount">—</div>
+              <div class="label">Total users</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="adminCount">—</div>
+              <div class="label">Administrators</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="reportCountUsers">—</div>
+              <div class="label">Total reports</div>
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-head">
+              <h2>Registered users</h2>
+
+              <input class="search" id="userSearch" placeholder="Search name or phone">
+            </div>
+
+            <div class="table-wrap">
+
+              <table class="table">
+
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Account type</th>
+                    <th>Joined</th>
+                  </tr>
+                </thead>
+
+                <tbody id="usersBody"></tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- REPORTS SECTION -->
+        <section class="section" id="reportsSection">
+
+          <h1>Issues & Reports</h1>
+
+          <p class="content-sub">
+            Review every issue submitted by CivicFix users, including evidence and report details.
+          </p>
+
+          <div class="stats">
+
+            <div class="stat">
+              <div class="num" id="reportTotal">—</div>
+              <div class="label">Total reports</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="reportPending">—</div>
+              <div class="label">Pending</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="reportResolved">—</div>
+              <div class="label">Resolved</div>
+            </div>
+
+          </div>
+
+
+          <div class="panel">
+
+            <div class="panel-head">
+
+              <h2>Submitted reports</h2>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+
+                <input class="search" id="reportSearch" placeholder="Search reports">
+
+                <select class="filter" id="statusFilter">
+
+                  <option value="">All statuses</option>
+                  <option>Pending</option>
+                  <option>In Review</option>
+                  <option>In Process</option>
+                  <option>Finished</option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+              <table class="table">
+
+                <thead>
+
+                  <tr>
+                    <th>Evidence</th>
+                    <th>Issue</th>
+                    <th>Reporter</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="reportsBody"></tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- NEW USER FEEDBACK SECTION -->
+        <!-- ========================= -->
+
+        <section class="section" id="feedbackSection">
+
+          <h1>User Feedback</h1>
+
+          <p class="content-sub">
+            View feedback submitted by CivicFix users.
+          </p>
+
+
+          <!-- FEEDBACK STATS -->
+          <div class="stats">
+
+            <div class="stat">
+              <div class="num" id="feedbackTotal">—</div>
+              <div class="label">Total feedback</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="feedbackAverage">—</div>
+              <div class="label">Average rating</div>
+            </div>
+
+            <div class="stat">
+              <div class="num" id="feedbackFiveStar">—</div>
+              <div class="label">5-star feedback</div>
+            </div>
+
+          </div>
+
+
+          <!-- FEEDBACK TABLE -->
+          <div class="panel">
+
+            <div class="panel-head">
+
+              <h2>Submitted feedback</h2>
+
+              <input class="search" id="feedbackSearch" placeholder="Search feedback">
+
+            </div>
+
+
+            <div class="table-wrap">
+
+              <table class="table">
+
+                <thead>
+
+                  <tr>
+                    <th>User</th>
+                    <th>Phone</th>
+                    <th>Rating</th>
+                    <th>Type</th>
+                    <th>Feedback</th>
+                    <th>Date</th>
+                  </tr>
+
+                </thead>
+
+                <tbody id="feedbackBody"></tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- REPORT DETAILS MODAL -->
+  <div class="modal" id="detailModal">
+
+    <div class="modal-card">
+
+      <div class="modal-top">
+
+        <h2 id="modalTitle">
+          Report details
+        </h2>
+
+        <button class="close" id="closeModal">
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="detail-grid" id="detailGrid"></div>
+
+      <div class="evidence" id="evidenceWrap"></div>
+
+
+      <div class="report-actions">
+
+        <div class="action-group">
+
+          <label for="modalStatus">
+            Update status
+          </label>
+
+          <select id="modalStatus">
+
+            <option>Pending</option>
+            <option>In Review</option>
+            <option>In Process</option>
+            <option>Finished</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="action-buttons">
+
+          <button class="save-status-btn" id="saveStatusBtn" type="button">
+            Save Status
+          </button>
+
+          <button class="delete-report-btn" id="deleteReportBtn" type="button">
+            Delete Report
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="toast" id="toast"></div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+
+    /* =========================
+       SUPABASE
+    ========================= */
+
+    const SUPABASE_URL =
+      "https://avxcoioegrebgjyauzjh.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+      "sb_publishable_eab9fQepYwpTR6jNV05q3Q_wG7_V1Zi";
+
+    const supabaseClient =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const authView =
+      document.getElementById("authView");
+
+    const appView =
+      document.getElementById("appView");
+
+    const authForm =
+      document.getElementById("adminForm");
+
+    const authMessage =
+      document.getElementById("authMessage");
+
+    const loginBtn =
+      document.getElementById("loginBtn");
+
+    const usersBody =
+      document.getElementById("usersBody");
+
+    const reportsBody =
+      document.getElementById("reportsBody");
+
+    const feedbackBody =
+      document.getElementById("feedbackBody");
+
+
+    /* =========================
+       DATA
+    ========================= */
+
+    let users = [];
+    let reports = [];
+    let feedback = [];
+
+    let activeReportId = null;
+
+
+    /* =========================
+       HELPER FUNCTIONS
+    ========================= */
+
+    function normalizePhone(value) {
+
+      let digits =
+        String(value || "")
+          .replace(/\D/g, "");
+
+      if (
+        digits.startsWith("91") &&
+        digits.length === 12
+      ) {
+        return "+" + digits;
+      }
+
+      if (digits.length === 10) {
+        return "+91" + digits;
+      }
+
+      return "+" + digits;
+    }
+
+
+    function internalEmail(phone) {
+
+      return `civicfix_${phone.replace(/\D/g, "")}@civicfix.app`;
+
+    }
+
+
+    function oldInternalEmail(phone) {
+
+      return `${phone.replace(/\D/g, "")}@civicfix.app`;
+
+    }
+
+
+    function escapeHtml(v) {
+
+      return String(v ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+
+    function dateText(v) {
+
+      if (!v) return "—";
+
+      const d = new Date(v);
+
+      return Number.isNaN(d.getTime())
+        ? "—"
+        : d.toLocaleString(
+          undefined,
+          {
+            dateStyle: "medium",
+            timeStyle: "short"
+          }
+        );
+
+    }
+
+
+    function statusClass(s) {
+
+      const x =
+        String(s || "").toLowerCase();
+
+      return x.includes("resolved")
+        ? "resolved"
+        : x.includes("progress")
+          ? "progress"
+          : x.includes("pending")
+            ? "pending"
+            : "other";
+
+    }
+
+
+    function showAuthMessage(
+      text,
+      type = "error"
+    ) {
+
+      authMessage.textContent = text;
+
+      authMessage.className =
+        "message show " + type;
+
+    }
+
+
+    function showToast(
+      text,
+      type = ""
+    ) {
+
+      const t =
+        document.getElementById("toast");
+
+      t.textContent = text;
+
+      t.className =
+        "toast show" +
+        (type ? " " + type : "");
+
+      setTimeout(
+        () => {
+          t.className = "toast";
+        },
+        2600
+      );
+
+    }
+
+
+    /* =========================
+       GET CURRENT ADMIN
+    ========================= */
+
+    async function getCurrentAdmin() {
+
+      const {
+        data: { user }
+      } =
+        await supabaseClient.auth.getUser();
+
+      if (!user) {
+        return null;
+      }
+
+
+      const {
+        data: profile,
+        error
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(
+            "id,full_name,phone,role"
+          )
+          .eq("id", user.id)
+          .maybeSingle();
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (
+        !profile ||
+        profile.role !== "admin"
+      ) {
+        return null;
+      }
+
+
+      return {
+        user,
+        profile
+      };
+
+    }
+
+
+    /* =========================
+       ADMIN LOGIN
+    ========================= */
+
+    async function adminLogin(
+      phone,
+      password
+    ) {
+
+      const normalized =
+        normalizePhone(phone);
+
+
+      let result =
+        await supabaseClient.auth.signInWithPassword({
+          email: internalEmail(normalized),
+          password
+        });
+
+
+      if (result.error) {
+
+        const legacy =
+          await supabaseClient.auth.signInWithPassword({
+            email: oldInternalEmail(normalized),
+            password
+          });
+
+        if (!legacy.error) {
+          result = legacy;
+        }
+
+      }
+
+
+      if (
+        result.error ||
+        !result.data?.session
+      ) {
+
+        throw new Error(
+          result.error?.message ||
+          "Login failed."
+        );
+
+      }
+
+
+      const admin =
+        await getCurrentAdmin();
+
+
+      if (!admin) {
+
+        await supabaseClient.auth.signOut();
+
+        throw new Error(
+          "This account is not authorized as an administrator."
+        );
+
+      }
+
+
+      return admin;
+
+    }
+
+
+    /* =========================
+       LOGIN FORM
+    ========================= */
+
+    authForm.addEventListener(
+      "submit",
+      async e => {
+
+        e.preventDefault();
+
+        loginBtn.disabled = true;
+
+        showAuthMessage(
+          "Signing in...",
+          "success"
+        );
+
+
+        try {
+
+          await adminLogin(
+            document.getElementById("phone").value,
+            document.getElementById("password").value
+          );
+
+
+          authView.style.display = "none";
+          appView.style.display = "block";
+
+
+          await loadAll();
+
+
+        } catch (err) {
+
+          console.error(err);
+
+          showAuthMessage(
+            err?.message ||
+            "Unable to sign in."
+          );
+
+        } finally {
+
+          loginBtn.disabled = false;
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       SIDEBAR NAVIGATION
+    ========================= */
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(btn => {
+
+        btn.addEventListener(
+          "click",
+          () => {
+
+            document
+              .querySelectorAll(".nav-btn")
+              .forEach(b => {
+
+                b.classList.toggle(
+                  "active",
+                  b === btn
+                );
+
+              });
+
+
+            document
+              .querySelectorAll(".section")
+              .forEach(s => {
+
+                s.classList.remove(
+                  "active"
+                );
+
+              });
+
+
+            const section =
+              document.getElementById(
+                btn.dataset.section + "Section"
+              );
+
+
+            if (section) {
+
+              section.classList.add(
+                "active"
+              );
+
+            }
+
+          }
+        );
+
+      });
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    document
+      .getElementById("logoutBtn")
+      .addEventListener(
+        "click",
+        async () => {
+
+          await supabaseClient.auth.signOut();
+
+          location.reload();
+
+        }
+      );
+
+
+    /* =========================
+       LOAD ALL DATA
+    ========================= */
+
+    async function loadAll() {
+
+      /* USERS */
+
+      const {
+        data: profileRows,
+        error: profilesError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(
+            "id,full_name,phone,role,created_at"
+          )
+          .order(
+            "created_at",
+            { ascending: false }
+          );
+
+
+      if (profilesError) {
+        throw profilesError;
+      }
+
+
+      users =
+        profileRows || [];
+
+
+      /* REPORTS */
+
+      const {
+        data: reportRows,
+        error: reportsError
+      } =
+        await supabaseClient
+          .from("reports")
+          .select(
+            "id,user_id,name,issue_type,location,description,image_url,status,created_at"
+          )
+          .order(
+            "created_at",
+            { ascending: false }
+          );
+
+
+      if (reportsError) {
+        throw reportsError;
+      }
+
+
+      reports =
+        reportRows || [];
+
+
+      /* =========================
+         FEEDBACK
+      ========================= */
+
+      // const {
+      //   data: feedbackRows,
+      //   error: feedbackError
+      // } =
+      //   await supabaseClient
+      //     .from("feedback")
+      //     .select(
+      //       "id,user_id,name,phone,rating,feedback_type,message,created_at"
+      //     )
+      //     .order(
+      //       "created_at",
+      //       { ascending: false }
+      //     );
+
+
+      // if (feedbackError) {
+
+      //   console.error(
+      //     "Feedback loading error:",
+      //     feedbackError
+      //   );
+
+      //   throw feedbackError;
+
+      // }
+
+
+      // feedback =
+      //   feedbackRows || [];
+
+
+      // /* RENDER */
+
+      // renderUsers();
+      // renderReports();
+      // renderFeedback();
+
+      const {
+        data: feedbackRows,
+        error: feedbackError
+      } = await supabaseClient
+        .from("feedback")
+        .select("id,user_id,name,phone,rating,feedback_type,message,created_at")
+        .order("created_at", { ascending: false });
+
+      if (feedbackError) {
+        console.error("Feedback loading error:", feedbackError);
+
+        feedback = [];
+
+        document.getElementById("feedbackBody").innerHTML = `
+    <tr>
+      <td colspan="6" class="empty">
+        Could not load feedback.
+        <br>
+        <small>${escapeHtml(
+          feedbackError.message || "Database permission error"
+        )}</small>
+      </td>
+    </tr>
+  `;
+
+        document.getElementById("feedbackTotal").textContent = "0";
+        document.getElementById("feedbackAverage").textContent = "—";
+        document.getElementById("feedbackFiveStar").textContent = "0";
+
+      } else {
+
+        feedback = feedbackRows || [];
+
+        renderFeedback();
+
+        document.getElementById("feedbackTotal").textContent =
+          feedback.length;
+
+        const ratings = feedback
+          .map(f => Number(f.rating))
+          .filter(r => r >= 1 && r <= 5);
+
+        const average = ratings.length
+          ? (
+            ratings.reduce((a, b) => a + b, 0) /
+            ratings.length
+          ).toFixed(1)
+          : "—";
+
+        document.getElementById("feedbackAverage").textContent =
+          average;
+
+        document.getElementById("feedbackFiveStar").textContent =
+          feedback.filter(f => Number(f.rating) === 5).length;
+      }
+
+      renderUsers();
+      renderReports();
+
+      /* USER STATS */
+
+      document.getElementById(
+        "userCount"
+      ).textContent =
+        users.filter(
+          u => u.role !== "admin"
+        ).length;
+
+
+      document.getElementById(
+        "adminCount"
+      ).textContent =
+        users.filter(
+          u => u.role === "admin"
+        ).length;
+
+
+      document.getElementById(
+        "reportCountUsers"
+      ).textContent =
+        reports.length;
+
+
+      /* REPORT STATS */
+
+      document.getElementById(
+        "reportTotal"
+      ).textContent =
+        reports.length;
+
+
+      document.getElementById(
+        "reportPending"
+      ).textContent =
+        reports.filter(
+          r =>
+            String(r.status || "")
+              .toLowerCase()
+              .includes("pending")
+        ).length;
+
+
+      document.getElementById(
+        "reportResolved"
+      ).textContent =
+        reports.filter(
+          r =>
+            String(r.status || "")
+              .toLowerCase() === "finished"
+        ).length;
+
+
+      /* FEEDBACK STATS */
+
+      document.getElementById(
+        "feedbackTotal"
+      ).textContent =
+        feedback.length;
+
+
+      const ratings =
+        feedback
+          .map(f => Number(f.rating))
+          .filter(
+            r =>
+              r >= 1 &&
+              r <= 5
+          );
+
+
+      const average =
+        ratings.length
+          ? (
+            ratings.reduce(
+              (a, b) => a + b,
+              0
+            ) / ratings.length
+          ).toFixed(1)
+          : "—";
+
+
+      document.getElementById(
+        "feedbackAverage"
+      ).textContent =
+        average;
+
+
+      document.getElementById(
+        "feedbackFiveStar"
+      ).textContent =
+        feedback.filter(
+          f => Number(f.rating) === 5
+        ).length;
+
+    }
+
+
+    /* =========================
+       RENDER USERS
+    ========================= */
+
+    function renderUsers() {
+
+      const q =
+        document.getElementById(
+          "userSearch"
+        )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const rows =
+        users.filter(
+          u =>
+            `${u.full_name || ""} ${u.phone || ""}`
+              .toLowerCase()
+              .includes(q)
+        );
+
+
+      if (!rows.length) {
+
+        usersBody.innerHTML =
+          `
+        <tr>
+          <td colspan="4" class="empty">
+            No users found.
+          </td>
+        </tr>
+        `;
+
+        return;
+
+      }
+
+
+      usersBody.innerHTML =
+        rows.map(
+          u => `
+          <tr>
+
+            <td>
+              <strong>
+                ${escapeHtml(
+            u.full_name ||
+            "Unnamed user"
+          )}
+              </strong>
+            </td>
+
+            <td>
+              ${escapeHtml(
+            u.phone || "—"
+          )}
+            </td>
+
+            <td>
+              ${u.role === "admin"
+              ?
+              '<span class="status progress">Admin</span>'
+              :
+              "User"
+            }
+            </td>
+
+            <td>
+              ${dateText(
+              u.created_at
+            )}
+            </td>
+
+          </tr>
+        `
+        ).join("");
+
+    }
+
+
+    /* =========================
+       RENDER REPORTS
+    ========================= */
+
+    function renderReports() {
+
+      const q =
+        document.getElementById(
+          "reportSearch"
+        )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const filter =
+        document.getElementById(
+          "statusFilter"
+        )
+          .value
+          .toLowerCase();
+
+
+      const byId =
+        new Map(
+          users.map(
+            u => [u.id, u]
+          )
+        );
+
+
+      const rows =
+        reports.filter(
+          r => {
+
+            const u =
+              byId.get(
+                r.user_id
+              );
+
+
+            const hay =
+              `
+            ${r.name || ""}
+            ${r.issue_type || ""}
+            ${r.location || ""}
+            ${r.description || ""}
+            ${u?.full_name || ""}
+            ${u?.phone || ""}
+            `
+                .toLowerCase();
+
+
+            return (
+              (!q || hay.includes(q)) &&
+              (
+                !filter ||
+                String(
+                  r.status || ""
+                ).toLowerCase() === filter
+              )
+            );
+
+          }
+        );
+
+
+      if (!rows.length) {
+
+        reportsBody.innerHTML =
+          `
+        <tr>
+          <td colspan="7" class="empty">
+            No reports found.
+          </td>
+        </tr>
+        `;
+
+        return;
+
+      }
+
+
+      reportsBody.innerHTML =
+        rows.map(
+          r => {
+
+            const u =
+              byId.get(
+                r.user_id
+              );
+
+
+            return `
+            <tr>
+
+              <td>
+
+                ${r.image_url
+                ?
+                `
+                  <img
+                    class="thumb"
+                    src="${escapeHtml(r.image_url)}"
+                    alt="Evidence photo"
+                  >
+                  `
+                :
+                `
+                  <span class="no-image">
+                    No photo
+                  </span>
+                  `
+              }
+
+              </td>
+
+
+              <td>
+                <strong>
+                  ${escapeHtml(
+                r.issue_type ||
+                "Community issue"
+              )}
+                </strong>
+              </td>
+
+
+              <td>
+
+                ${escapeHtml(
+                r.name ||
+                u?.full_name ||
+                "Unknown"
+              )}
+
+                <br>
+
+                <span style="color:#78837d">
+                  ${escapeHtml(
+                u?.phone || ""
+              )}
+                </span>
+
+              </td>
+
+
+              <td>
+                ${escapeHtml(
+                r.location || "—"
+              )}
+              </td>
+
+
+              <td>
+
+                <span
+                  class="status ${statusClass(r.status)}"
+                >
+                  ${escapeHtml(
+                r.status ||
+                "Pending"
+              )}
+                </span>
+
+              </td>
+
+
+              <td>
+                ${dateText(
+                r.created_at
+              )}
+              </td>
+
+
+              <td>
+
+                <button
+                  class="view-btn"
+                  data-report-id="${escapeHtml(r.id)}"
+                >
+                  View
+                </button>
+
+              </td>
+
+            </tr>
+          `;
+
+          }
+        ).join("");
+
+
+      document
+        .querySelectorAll(
+          "[data-report-id]"
+        )
+        .forEach(
+          b =>
+            b.addEventListener(
+              "click",
+              () =>
+                openReport(
+                  b.dataset.reportId
+                )
+            )
+        );
+
+    }
+
+
+    /* =========================
+       RENDER FEEDBACK
+    ========================= */
+
+    function renderFeedback() {
+
+      const search =
+        document.getElementById(
+          "feedbackSearch"
+        )
+          .value
+          .trim()
+          .toLowerCase();
+
+
+      const rows =
+        feedback.filter(
+          f => {
+
+            const searchable =
+              `
+            ${f.name || ""}
+            ${f.phone || ""}
+            ${f.feedback_type || ""}
+            ${f.message || ""}
+            ${f.rating || ""}
+            `
+                .toLowerCase();
+
+
+            return (
+              !search ||
+              searchable.includes(search)
+            );
+
+          }
+        );
+
+
+      if (!rows.length) {
+
+        feedbackBody.innerHTML =
+          `
+        <tr>
+          <td colspan="6" class="empty">
+            No feedback found.
+          </td>
+        </tr>
+        `;
+
+        return;
+
+      }
+
+
+      feedbackBody.innerHTML =
+        rows.map(
+          f => {
+
+            const rating =
+              Number(f.rating) || 0;
+
+
+            const safeRating =
+              Math.max(
+                0,
+                Math.min(
+                  5,
+                  rating
+                )
+              );
+
+
+            const stars =
+              "★".repeat(safeRating) +
+              "☆".repeat(
+                5 - safeRating
+              );
+
+
+            return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHtml(
+              f.name ||
+              "Unknown user"
+            )}
+                </strong>
+              </td>
+
+
+              <td>
+                ${escapeHtml(
+              f.phone ||
+              "—"
+            )}
+              </td>
+
+
+              <td>
+
+                <span class="rating-stars">
+                  ${stars}
+                </span>
+
+                <br>
+
+                <small>
+                  ${safeRating}/5
+                </small>
+
+              </td>
+
+
+              <td>
+
+                <span class="feedback-type">
+                  ${escapeHtml(
+              f.feedback_type ||
+              "General"
+            )}
+                </span>
+
+              </td>
+
+
+              <td
+                class="feedback-message"
+              >
+                ${escapeHtml(
+              f.message ||
+              "—"
+            )}
+              </td>
+
+
+              <td>
+                ${dateText(
+              f.created_at
+            )}
+              </td>
+
+            </tr>
+          `;
+
+          }
+        ).join("");
+
+    }
+
+
+    /* =========================
+       OPEN REPORT
+    ========================= */
+
+    function openReport(id) {
+
+      const r =
+        reports.find(
+          x =>
+            String(x.id) ===
+            String(id)
+        );
+
+
+      if (!r) {
+        return;
+      }
+
+
+      activeReportId =
+        r.id;
+
+
+      const u =
+        users.find(
+          x =>
+            x.id ===
+            r.user_id
+        );
+
+
+      document.getElementById(
+        "modalTitle"
+      ).textContent =
+        `${r.issue_type || "Issue"} — Report #${r.id}`;
+
+
+      const items = [
+
+        [
+          "Reporter",
+          r.name ||
+          u?.full_name ||
+          "Unknown"
+        ],
+
+        [
+          "Phone",
+          u?.phone ||
+          "Not available"
+        ],
+
+        [
+          "Issue type",
+          r.issue_type ||
+          "—"
+        ],
+
+        [
+          "Status",
+          r.status ||
+          "Pending"
+        ],
+
+        [
+          "Location",
+          r.location ||
+          "—"
+        ],
+
+        [
+          "Submitted",
+          dateText(
+            r.created_at
+          )
+        ],
+
+        [
+          "Description",
+          r.description ||
+          "—"
+        ]
+
+      ];
+
+
+      document.getElementById(
+        "detailGrid"
+      ).innerHTML =
+        items.map(
+          ([a, b], i) =>
+            `
+          <div
+            class="detail ${i === 6 ? "full" : ""}"
+          >
+
+            <small>
+              ${escapeHtml(a)}
+            </small>
+
+            <strong>
+              ${escapeHtml(b)}
+            </strong>
+
+          </div>
+          `
+        ).join("");
+
+
+      const statusSelect =
+        document.getElementById(
+          "modalStatus"
+        );
+
+
+      const currentStatus =
+        String(
+          r.status ||
+          "Pending"
+        );
+
+
+      const allowed = [
+        "Pending",
+        "In Review",
+        "In Process",
+        "Finished"
+      ];
+
+
+      statusSelect.innerHTML =
+        allowed.map(
+          s =>
+            `<option>${s}</option>`
+        ).join("");
+
+
+      if (
+        !allowed.includes(
+          currentStatus
+        )
+      ) {
+
+        statusSelect.insertAdjacentHTML(
+          "afterbegin",
+          `<option>${escapeHtml(
+            currentStatus
+          )}</option>`
+        );
+
+      }
+
+
+      statusSelect.value =
+        currentStatus;
+
+
+      const ew =
+        document.getElementById(
+          "evidenceWrap"
+        );
+
+
+      ew.innerHTML =
+        r.image_url
+          ?
+          `
+      <h3>
+        Evidence photo
+      </h3>
+
+      <img
+        src="${escapeHtml(r.image_url)}"
+        alt="Uploaded issue evidence"
+      >
+      `
+          :
+          `
+      <p style="color:#6a756e">
+        No evidence photo was uploaded with this report.
+      </p>
+      `;
+
+
+      document.getElementById(
+        "detailModal"
+      ).classList.add("show");
+
+    }
+
+
+    /* =========================
+       SAVE REPORT STATUS
+    ========================= */
+
+    document
+      .getElementById(
+        "saveStatusBtn"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          if (
+            activeReportId === null
+          ) {
+            return;
+          }
+
+
+          const btn =
+            document.getElementById(
+              "saveStatusBtn"
+            );
+
+
+          const original =
+            btn.textContent;
+
+
+          const newStatus =
+            document.getElementById(
+              "modalStatus"
+            ).value;
+
+
+          btn.disabled = true;
+          btn.textContent = "Saving...";
+
+
+          try {
+
+            const { error } =
+              await supabaseClient
+                .from("reports")
+                .update({
+                  status: newStatus
+                })
+                .eq(
+                  "id",
+                  activeReportId
+                );
+
+
+            if (error) {
+              throw error;
+            }
+
+
+            const report =
+              reports.find(
+                r =>
+                  String(r.id) ===
+                  String(activeReportId)
+              );
+
+
+            if (report) {
+              report.status =
+                newStatus;
+            }
+
+
+            renderReports();
+
+
+            document.getElementById(
+              "reportPending"
+            ).textContent =
+              reports.filter(
+                r =>
+                  String(
+                    r.status || ""
+                  ).toLowerCase() ===
+                  "pending"
+              ).length;
+
+
+            document.getElementById(
+              "reportResolved"
+            ).textContent =
+              reports.filter(
+                r =>
+                  String(
+                    r.status || ""
+                  ).toLowerCase() ===
+                  "finished"
+              ).length;
+
+
+            openReport(
+              activeReportId
+            );
+
+
+            showToast(
+              "Report status updated successfully.",
+              "success"
+            );
+
+
+          } catch (err) {
+
+            console.error(err);
+
+            showToast(
+              err?.message ||
+              "Could not update the report status.",
+              "error"
+            );
+
+
+          } finally {
+
+            btn.disabled = false;
+            btn.textContent = original;
+
+          }
+
+        }
+      );
+
+
+    /* =========================
+       DELETE REPORT
+    ========================= */
+
+    document
+      .getElementById(
+        "deleteReportBtn"
+      )
+      .addEventListener(
+        "click",
+        async () => {
+
+          if (
+            activeReportId === null
+          ) {
+            return;
+          }
+
+
+          const report =
+            reports.find(
+              r =>
+                String(r.id) ===
+                String(activeReportId)
+            );
+
+
+          const label =
+            report?.issue_type
+              ?
+              `"${report.issue_type}"`
+              :
+              `#${activeReportId}`;
+
+
+          if (
+            !confirm(
+              `Are you sure you want to permanently delete report ${label}? This cannot be undone.`
+            )
+          ) {
+            return;
+          }
+
+
+          const btn =
+            document.getElementById(
+              "deleteReportBtn"
+            );
+
+
+          const original =
+            btn.textContent;
+
+
+          btn.disabled = true;
+          btn.textContent = "Deleting...";
+
+
+          try {
+
+            const { error } =
+              await supabaseClient
+                .from("reports")
+                .delete()
+                .eq(
+                  "id",
+                  activeReportId
+                );
+
+
+            if (error) {
+              throw error;
+            }
+
+
+            reports =
+              reports.filter(
+                r =>
+                  String(r.id) !==
+                  String(activeReportId)
+              );
+
+
+            activeReportId =
+              null;
+
+
+            document.getElementById(
+              "detailModal"
+            ).classList.remove(
+              "show"
+            );
+
+
+            renderReports();
+
+
+            document.getElementById(
+              "reportCountUsers"
+            ).textContent =
+              reports.length;
+
+
+            document.getElementById(
+              "reportTotal"
+            ).textContent =
+              reports.length;
+
+
+            document.getElementById(
+              "reportPending"
+            ).textContent =
+              reports.filter(
+                r =>
+                  String(
+                    r.status || ""
+                  ).toLowerCase() ===
+                  "pending"
+              ).length;
+
+
+            document.getElementById(
+              "reportResolved"
+            ).textContent =
+              reports.filter(
+                r =>
+                  String(
+                    r.status || ""
+                  ).toLowerCase() ===
+                  "finished"
+              ).length;
+
+
+            showToast(
+              "Report deleted successfully.",
+              "success"
+            );
+
+
+          } catch (err) {
+
+            console.error(err);
+
+            showToast(
+              err?.message ||
+              "Could not delete the report.",
+              "error"
+            );
+
+
+          } finally {
+
+            btn.disabled = false;
+            btn.textContent = original;
+
+          }
+
+        }
+      );
+
+
+    /* =========================
+       CLOSE MODAL
+    ========================= */
+
+    document
+      .getElementById(
+        "closeModal"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          activeReportId = null;
+
+          document.getElementById(
+            "detailModal"
+          ).classList.remove(
+            "show"
+          );
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "detailModal"
+      )
+      .addEventListener(
+        "click",
+        e => {
+
+          if (
+            e.target.id ===
+            "detailModal"
+          ) {
+
+            activeReportId = null;
+
+            e.currentTarget.classList.remove(
+              "show"
+            );
+
+          }
+
+        }
+      );
+
+
+    /* =========================
+       SEARCH
+    ========================= */
+
+    document
+      .getElementById(
+        "userSearch"
+      )
+      .addEventListener(
+        "input",
+        renderUsers
+      );
+
+
+    document
+      .getElementById(
+        "reportSearch"
+      )
+      .addEventListener(
+        "input",
+        renderReports
+      );
+
+
+    document
+      .getElementById(
+        "statusFilter"
+      )
+      .addEventListener(
+        "change",
+        renderReports
+      );
+
+
+    /* NEW FEEDBACK SEARCH */
+
+    document
+      .getElementById(
+        "feedbackSearch"
+      )
+      .addEventListener(
+        "input",
+        renderFeedback
+      );
+
+
+    /* =========================
+       CHECK EXISTING SESSION
+    ========================= */
+
+    (async () => {
+
+      try {
+
+        const admin =
+          await getCurrentAdmin();
+
+
+        if (admin) {
+
+          authView.style.display =
+            "none";
+
+          appView.style.display =
+            "block";
+
+
+          await loadAll();
+
+        }
+
+      } catch (e) {
+
+        console.warn(
+          "Admin session check failed",
+          e
+        );
+
+      }
+
+    })();
+
+  </script>
+
+</body>
+
+</html>
