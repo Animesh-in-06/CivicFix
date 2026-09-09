@@ -129,13 +129,6 @@
            MY PROFILE BUTTON
         ========================= */
 
-        .profile-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-
         .profile-btn {
             width: 44px;
             height: 44px;
@@ -192,13 +185,13 @@
             pointer-events: none;
         }
 
-        .profile-label {
-            color: rgba(255, 255, 255, .92);
-            font-size: 10px;
+        .profile-initials {
+            font-size: 15px;
             font-weight: 700;
-            letter-spacing: .08em;
-            text-transform: uppercase;
             line-height: 1;
+            letter-spacing: .02em;
+            color: #1d392c;
+            pointer-events: none;
         }
 
         /* =========================
@@ -661,49 +654,6 @@
             animation: popupFadeIn .25s ease;
         }
 
-        /* LOGIN SUCCESS: short, centered notification that disappears automatically */
-        #loginSuccessPopup {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            pointer-events: none;
-        }
-
-        #loginSuccessPopup .success-popup {
-            pointer-events: none;
-        }
-
-        #loginSuccessPopup.login-success-hide {
-            display: flex;
-            animation: loginSuccessOverlayOut .35s ease forwards;
-        }
-
-        #loginSuccessPopup.login-success-hide .success-popup {
-            animation: loginSuccessPopupOut .35s ease forwards;
-        }
-
-        @keyframes loginSuccessOverlayOut {
-            from {
-                opacity: 1;
-            }
-
-            to {
-                opacity: 0;
-            }
-        }
-
-        @keyframes loginSuccessPopupOut {
-            from {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-
-            to {
-                opacity: 0;
-                transform: scale(.96) translateY(-8px);
-            }
-        }
-
         .success-popup {
             width: min(460px, 100%);
             padding: 36px 30px 30px;
@@ -816,196 +766,61 @@
                 font-size: 12px;
             }
         }
+    
 
-
-        /* =========================================================
+/* =========================================================
    CIVICFIX MOBILE RESPONSIVE LAYER
    Desktop layout/functionality is intentionally unchanged.
 ========================================================= */
-        @media (max-width: 760px) {
+@media (max-width: 760px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  img, svg, video, canvas { max-width: 100%; }
+  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 
-            html,
-            body {
-                width: 100%;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
+  nav {
+    width: calc(100% - 24px);
+    max-width: none;
+    top: 12px;
+    min-height: 60px;
+    height: auto;
+    padding: 0 12px 0 15px;
+  }
 
-            img,
-            svg,
-            video,
-            canvas {
-                max-width: 100%;
-            }
+  .brand { font-size: 18px; gap: 8px; }
+  .mark { width: 29px; height: 29px; flex: 0 0 auto; }
+  .links { display: none; }
+  .profile-btn {
+    width: 42px; height: 42px;
+    min-width: 42px; min-height: 42px;
+  }
 
-            button,
-            a,
-            input,
-            select,
-            textarea {
-                -webkit-tap-highlight-color: transparent;
-            }
+  .hero { min-height: auto; padding: 120px 16px 55px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+  .hero-grid > * { min-width: 0; }
+  h1 { font-size: clamp(42px, 13vw, 56px); line-height: 1.02; }
+  .intro { max-width: 100%; font-size: 15px; }
 
-            nav {
-                width: calc(100% - 24px);
-                max-width: none;
-                top: 12px;
-                min-height: 60px;
-                height: auto;
-                padding: 0 12px 0 15px;
-            }
+  .actions { flex-wrap: wrap; gap: 10px; }
+  .report-btn, .text-link { min-height: 44px; }
+  .issue-card { width: 100%; max-width: 360px; justify-self: center; }
+  .section { padding-left: 16px; padding-right: 16px; }
+  footer { padding-left: 16px; padding-right: 16px; gap: 10px; }
 
-            .brand {
-                font-size: 18px;
-                gap: 8px;
-            }
+  .success-popup {
+    width: calc(100% - 32px);
+    max-width: 420px;
+    padding: 24px 20px;
+  }
+}
 
-            .mark {
-                width: 29px;
-                height: 29px;
-                flex: 0 0 auto;
-            }
+@media (max-width: 420px) {
+  .hero { padding-left: 14px; padding-right: 14px; }
+  .actions { flex-direction: column; align-items: stretch; }
+  .report-btn, .text-link { width: 100%; text-align: center; }
+  .issue-card { max-width: none; }
+}
 
-            .links {
-                display: none;
-            }
-
-            .profile-btn {
-                width: 42px;
-                height: 42px;
-                min-width: 42px;
-                min-height: 42px;
-            }
-
-            .hero {
-                min-height: auto;
-                padding: 120px 16px 55px;
-            }
-
-            .hero-grid {
-                grid-template-columns: 1fr;
-                gap: 34px;
-            }
-
-            .hero-grid>* {
-                min-width: 0;
-            }
-
-            h1 {
-                font-size: clamp(42px, 13vw, 56px);
-                line-height: 1.02;
-            }
-
-            .intro {
-                max-width: 100%;
-                font-size: 15px;
-            }
-
-            .actions {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .report-btn,
-            .text-link {
-                min-height: 44px;
-            }
-
-            .issue-card {
-                width: 100%;
-                max-width: 360px;
-                justify-self: center;
-            }
-
-            .section {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-
-            footer {
-                padding-left: 16px;
-                padding-right: 16px;
-                gap: 10px;
-            }
-
-            .success-popup {
-                width: calc(100% - 32px);
-                max-width: 420px;
-                padding: 24px 20px;
-            }
-        }
-
-        @media (max-width: 420px) {
-            .hero {
-                padding-left: 14px;
-                padding-right: 14px;
-            }
-
-            .actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .report-btn,
-            .text-link {
-                width: 100%;
-                text-align: center;
-            }
-
-            .issue-card {
-                max-width: none;
-            }
-        }
-
-
-
-        /* CIVICFIX PAGE OPEN ANIMATION */
-        @keyframes civicfixPageFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        body {
-            animation: civicfixPageFadeIn .65s cubic-bezier(.22, 1, .36, 1) both;
-        }
-
-        @media (max-width: 760px) {
-            nav {
-                flex-wrap: wrap;
-                align-content: center;
-            }
-
-            .links {
-                display: flex !important;
-                order: 3;
-                flex: 0 0 100%;
-                width: 100%;
-                justify-content: space-around;
-                gap: 7px;
-                padding: 8px 0 9px;
-            }
-
-            .links a {
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            .profile-btn {
-                margin-left: auto;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            body {
-                animation: none !important;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
@@ -1031,24 +846,17 @@
             <a href="feedback.html">Feedback</a>
             <a href="#info">Info</a>
             <a href="team.html">Team</a>
-<!-- <a href="login.html">Login / Register</a> -->
             <!-- <a href="login.html">Login / Register</a> -->
         </div>
 
         <!-- MY PROFILE BUTTON -->
         <!-- Clicking this opens dashboard.html -->
-        <div class="profile-wrap">
-            <button type="button" class="profile-btn" title="My Profile" aria-label="My Profile"
-                onclick="window.location.href='dashbaord.html'">
+        <button type="button" class="profile-btn" id="profileInitials" title="My Profile" aria-label="My Profile"
+            onclick="window.location.href='dashbaord.html'">
 
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="8" r="4"></circle>
-                    <path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"></path>
-                </svg>
+            <span class="profile-initials" id="profileInitialsText">?</span>
 
-            </button>
-            <span class="profile-label">My Profile</span>
-        </div>
+        </button>
 
     </nav>
 
@@ -1312,20 +1120,11 @@
         </span>
 
         <span>
-            Made with care for every corner of the city by BlueBytes .
+            Made with care for every corner of the city by URBANOVA.
         </span>
 
     </footer>
 
-
-    <div class="success-popup-overlay" id="loginSuccessPopup" role="dialog" aria-modal="true"
-        aria-labelledby="loginSuccessTitle">
-        <div class="success-popup">
-            <div class="success-popup-icon">✓</div>
-            <h2 id="loginSuccessTitle">Login successful!</h2>
-            <p>Welcome back to CivicFix. You are now signed in successfully.</p>
-        </div>
-    </div>
 
     <div class="success-popup-overlay" id="reportSuccessPopup" role="dialog" aria-modal="true"
         aria-labelledby="reportSuccessTitle">
@@ -1336,6 +1135,11 @@
             <button type="button" id="reportSuccessClose">Continue</button>
         </div>
     </div>
+
+    <!-- =========================
+         SUPABASE
+    ========================= -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- =========================
          BACKDROP SCROLL EFFECT
@@ -1364,23 +1168,83 @@
 
 
 
-        const resultParams = new URLSearchParams(window.location.search);
+        /* =========================
+           SUPABASE PROFILE INITIALS
+        ========================= */
+        const SUPABASE_URL = "https://avxcoioegrebgjyauzjh.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_eab9fQepYwpTR6jNV05q3Q_wG7_V1Zi";
+        const supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
 
-        const loginSuccessPopup = document.getElementById("loginSuccessPopup");
+        async function loadProfileInitials() {
+            const initialsElement = document.getElementById("profileInitialsText");
+            const profileButton = document.getElementById("profileInitials");
 
-        if (resultParams.get("loginSuccess") === "1") {
-            loginSuccessPopup.classList.add("show");
-            window.history.replaceState({}, document.title, "index2.html");
+            if (!initialsElement || !profileButton) return;
 
-            // Show the success message briefly, then fade it away automatically.
-            window.setTimeout(() => {
-                loginSuccessPopup.classList.add("login-success-hide");
-                window.setTimeout(() => {
-                    loginSuccessPopup.classList.remove("show", "login-success-hide");
-                }, 350);
-            }, 1150);
+            try {
+                const { data: userData, error: userError } =
+                    await supabaseClient.auth.getUser();
+
+                if (userError || !userData?.user) {
+                    initialsElement.textContent = "?";
+                    return;
+                }
+
+                const user = userData.user;
+
+                let userName =
+                    user.user_metadata?.full_name ||
+                    user.user_metadata?.name ||
+                    "";
+
+                const { data: profile } = await supabaseClient
+                    .from("profiles")
+                    .select("full_name")
+                    .eq("id", user.id)
+                    .maybeSingle();
+
+                if (profile?.full_name) {
+                    userName = profile.full_name;
+                }
+
+                if (!userName.trim()) {
+                    initialsElement.textContent = "U";
+                    profileButton.setAttribute("aria-label", "My Profile - User");
+                    return;
+                }
+
+                const words = userName.trim().split(/\s+/).filter(Boolean);
+                let initials;
+
+                if (words.length === 1) {
+                    initials = words[0].charAt(0);
+                } else {
+                    initials = words[0].charAt(0) + words[words.length - 1].charAt(0);
+                }
+
+                initials = initials.toUpperCase();
+                initialsElement.textContent = initials;
+                profileButton.setAttribute(
+                    "aria-label",
+                    `My Profile - ${userName}`
+                );
+                profileButton.setAttribute(
+                    "title",
+                    `My Profile - ${userName}`
+                );
+
+            } catch (error) {
+                console.error("CivicFix profile initials error:", error);
+                initialsElement.textContent = "?";
+            }
         }
 
+        loadProfileInitials();
+
+        const resultParams = new URLSearchParams(window.location.search);
         const reportSuccessPopup = document.getElementById("reportSuccessPopup");
         const reportSuccessClose = document.getElementById("reportSuccessClose");
 
