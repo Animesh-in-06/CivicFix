@@ -27,7 +27,10 @@
 
     html {
       min-height: 100%;
-      scroll-behavior: smooth
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: auto;
+      touch-action: pan-y
     }
 
     body {
@@ -36,6 +39,9 @@
       overflow-x: hidden;
       overflow-y: auto;
       overscroll-behavior-x: none;
+      overscroll-behavior-y: auto;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
       color: var(--ink);
       font-family: "DM Sans", sans-serif;
       background: #243e31;
@@ -64,7 +70,8 @@
       background:
         linear-gradient(105deg, rgba(25, 54, 39, .85), rgba(40, 75, 54, .22)),
         url("https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=2200&q=85") center/cover;
-      animation: drift 18s ease-in-out infinite alternate
+      animation: drift 18s ease-in-out infinite alternate;
+      pointer-events: none
     }
 
     .scene:after {
@@ -73,7 +80,8 @@
       inset: 0;
       background:
         radial-gradient(circle at 74% 22%, rgba(211, 225, 151, .27), transparent 28%),
-        linear-gradient(0deg, rgba(17, 42, 29, .3), transparent)
+        linear-gradient(0deg, rgba(17, 42, 29, .3), transparent);
+      pointer-events: none
     }
 
     @keyframes drift {
@@ -88,7 +96,8 @@
       border-radius: 50%;
       filter: blur(2px);
       opacity: .65;
-      animation: float 7s ease-in-out infinite
+      animation: float 7s ease-in-out infinite;
+      pointer-events: none
     }
 
     .orb-one {
@@ -159,11 +168,13 @@
       display: grid;
       grid-template-columns: .9fr 1.1fr;
       align-items: center;
-      gap: clamp(42px, 9vw, 130px)
+      gap: clamp(42px, 9vw, 130px);
+      touch-action: pan-y
     }
 
     .welcome {
-      color: #fffdf7
+      color: #fffdf7;
+      touch-action: pan-y
     }
 
     .eyebrow {
@@ -219,7 +230,9 @@
       border-radius: 28px;
       background: rgba(255, 253, 247, .86);
       backdrop-filter: blur(20px);
-      box-shadow: 0 28px 70px rgba(14, 34, 24, .32)
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 28px 70px rgba(14, 34, 24, .32);
+      touch-action: pan-y
     }
 
     .form-head {
@@ -450,9 +463,9 @@
 
 
     /* =========================================================
-   CIVICFIX MOBILE RESPONSIVE LAYER
-   Desktop layout/functionality is intentionally unchanged.
-========================================================= */
+       CIVICFIX MOBILE RESPONSIVE LAYER
+       Desktop layout/functionality is intentionally unchanged.
+    ========================================================= */
     @media (max-width: 740px) {
 
       html,
@@ -460,6 +473,9 @@
         width: 100%;
         max-width: 100%;
         overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
       }
 
       nav {
@@ -485,10 +501,12 @@
         width: calc(100% - 24px);
         margin: 18px auto 36px;
         gap: 26px;
+        touch-action: pan-y;
       }
 
       .welcome {
         text-align: center;
+        touch-action: pan-y;
       }
 
       h1 {
@@ -503,6 +521,7 @@
         width: 100%;
         padding: 22px 17px;
         border-radius: 22px;
+        touch-action: pan-y;
       }
 
       .form-head {
@@ -597,30 +616,44 @@
         animation: none !important;
       }
     }
+
     /* =========================================================
-   CIVICFIX — ANDROID TOUCH SCROLL OPTIMIZATION
-   Scroll behavior only. No visual effects are changed.
-   ========================================================= */
+       CIVICFIX — ANDROID TOUCH SCROLL FIX
+       Keeps all existing visual effects and functionality.
+       Only improves touch scrolling.
+       ========================================================= */
 
-html {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: auto;
-}
+    main,
+    .welcome,
+    .auth-card,
+    form {
+      touch-action: pan-y;
+    }
 
-body {
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  overscroll-behavior-y: auto;
-}
+    .scene,
+    .orb,
+    .orb-one,
+    .orb-two {
+      pointer-events: none;
+    }
 
-/* Keep all existing animations and transitions untouched. */
-@media (max-width: 740px) {
-  html,
-  body {
-    touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
-  }
-}
+    /* Keep the page-opening effect, but prevent the body transform
+       from interfering with the first Android touch gesture. */
+    @keyframes civicfixPageFadeInMobile {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 740px) {
+      body {
+        animation-name: civicfixPageFadeInMobile;
+      }
+    }
   </style>
 </head>
 
