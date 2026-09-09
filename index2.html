@@ -819,7 +819,39 @@
   .report-btn, .text-link { width: 100%; text-align: center; }
   .issue-card { max-width: none; }
 }
+/* =========================================================
+   CIVICFIX MOBILE NAVIGATION FIX
+   Shows Home, Feedback, Info and Team on phones
+========================================================= */
 
+@media (max-width: 760px) {
+
+    nav {
+        flex-wrap: wrap;
+        align-content: center;
+    }
+
+    .links {
+        display: flex !important;
+        order: 3;
+        flex: 0 0 100%;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 0 9px;
+    }
+
+    .links a {
+        display: inline-block;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .profile-btn {
+        margin-left: auto;
+    }
+}
 </style>
 </head>
 
