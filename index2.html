@@ -651,6 +651,105 @@
         }
 
 
+        /* =========================
+           LOGIN SUCCESS TOAST
+        ========================= */
+
+        .login-success-popup {
+            position: fixed;
+            top: 98px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-15px);
+            z-index: 10001;
+            width: min(390px, calc(100% - 32px));
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, .35);
+            border-radius: 18px;
+            background: rgba(34, 58, 46, .94);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            color: white;
+            box-shadow: 0 18px 45px rgba(21, 41, 31, .28);
+            opacity: 0;
+            pointer-events: none;
+            animation: loginPopupShow 1.5s ease forwards;
+        }
+
+        .login-success-icon {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--lime);
+            color: #1d392c;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .login-success-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .login-success-content strong {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .login-success-content span {
+            color: rgba(255, 255, 255, .75);
+            font-size: 12px;
+        }
+
+        @keyframes loginPopupShow {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-15px);
+            }
+            15% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @media (max-width: 760px) {
+            .login-success-popup {
+                top: 82px;
+                width: calc(100% - 28px);
+                padding: 14px 16px;
+                border-radius: 16px;
+            }
+
+            .login-success-icon {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+            }
+
+            .login-success-content strong {
+                font-size: 14px;
+            }
+
+            .login-success-content span {
+                font-size: 11px;
+            }
+        }
+
+
         .success-popup-overlay {
             position: fixed;
             inset: 0;
@@ -1265,6 +1364,16 @@
     </footer>
 
 
+    <!-- LOGIN SUCCESS POPUP -->
+    <div class="login-success-popup" id="loginSuccessPopup" role="status" aria-live="polite">
+        <div class="login-success-icon">✓</div>
+        <div class="login-success-content">
+            <strong>Login successful!</strong>
+            <span>Welcome back to CivicFix.</span>
+        </div>
+    </div>
+
+
     <div class="success-popup-overlay" id="reportSuccessPopup" role="dialog" aria-modal="true"
         aria-labelledby="reportSuccessTitle">
 
@@ -1446,6 +1555,29 @@
 
         const reportSuccessClose =
             document.getElementById("reportSuccessClose");
+
+
+        /* =========================
+           LOGIN SUCCESS POPUP
+        ========================= */
+
+        const loginSuccessPopup =
+            document.getElementById("loginSuccessPopup");
+
+        if (resultParams.get("loginSuccess") === "1" && loginSuccessPopup) {
+
+            loginSuccessPopup.style.display = "flex";
+
+            window.history.replaceState(
+                {},
+                document.title,
+                "index2.html"
+            );
+
+            setTimeout(() => {
+                loginSuccessPopup.remove();
+            }, 1500);
+        }
 
 
         if (resultParams.get("reportSuccess") === "1") {
